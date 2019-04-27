@@ -2,6 +2,24 @@ var express = require('express');
 var app = express();
 var http = require('http').Server(app);
 var io = require('socket.io')(http);
+var serverIP;
+
+//-------------------------------
+//取得本地 IP
+var os = require('os');  
+var networkInterfaces = os.networkInterfaces(); 
+ 
+for(var i in networkInterfaces){
+  for(var j in networkInterfaces[i])
+  if(networkInterfaces[i][j].family=='IPv4')
+  {
+    if('127.0.0.1' !== networkInterfaces[i][j].address){
+      serverIP = networkInterfaces[i][j].address;
+    }      
+  }
+}
+//--------------------------------
+
 
 app.use(express.static(__dirname +'/public'));
 
@@ -11,8 +29,8 @@ io.on('connection', function(socket){
 
 //io
 
-http.listen(80, function(){
-  //console.log('listening on *:80');
+http.listen(8080, function(){
+  console.log('在瀏覽器的網址請輸入 ' + serverIP +':8080');
 });
 
 var teacherSocket = null;
