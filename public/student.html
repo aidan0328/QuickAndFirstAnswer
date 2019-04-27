@@ -1,0 +1,133 @@
+<html>
+  <head>
+    <title>學生</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/p5.js/0.7.3/p5.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/p5.js/0.7.3/addons/p5.dom.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/2.2.0/socket.io.js"></script>
+
+    <script src="https://code.jquery.com/jquery-3.4.0.slim.min.js"
+            integrity="sha256-ZaXnYkHGqIhqTbJ6MB4l9Frs/r7U4jlx7ir8PJYBqbI="
+            crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/vue"></script>
+
+    <link rel="stylesheet" type="text/css" href="css/style.css"/>
+    <link rel="stylesheet" type="text/css" href="https://fonts.googleapis.com/css?family=Noto+Sans+TC" >     
+    <link rel="stylesheet" type="text/css" href="https://fonts.googleapis.com/icon?family=Material+Icons">
+
+    <script src="https://www.gstatic.com/firebasejs/5.10.0/firebase.js"></script>
+      <script>
+        // Initialize Firebase
+        var config = {
+            apiKey: "AIzaSyCKeSmliuxYVur2Q02t78sjuEwMA_kxGg0",
+            authDomain: "answer-rank.firebaseapp.com",
+            databaseURL: "https://answer-rank.firebaseio.com",
+            projectId: "answer-rank",
+            storageBucket: "answer-rank.appspot.com",
+            messagingSenderId: "308914427340"
+        };
+        firebase.initializeApp(config);
+      </script>
+      <script src="./src/common.js"></script>
+    <style>
+      #inputNameDiv{
+        position:fixed;
+        top:0; bottom: 0; left: 0; right: 0;
+        z-index:100;
+        background-image: linear-gradient(to right, #fa709a 0%, #fee140 100%);
+        text-align:center;
+
+        animation-duration: 0.5s;
+        animation-delay: 0s;
+        animation-iteration-count: infinite;
+      }
+
+      #inputName{
+        margin-top: calc(50vh - ( 70px + 32px )  );
+        font-size: 140px;
+        color: white;
+        /* background:rgba(255,255,255,0.25); */
+        background:transparent;
+        border:none;
+        padding: 32px;
+
+        text-align: center;
+        font-family: 'Noto Sans TC', sans-serif;
+
+        width: 100%;
+      }
+
+      #inputName::placeholder{
+        /*text-align: center;*/
+        color: rgba(255,255,255,0.45);
+      }
+
+      body{
+        background-image: linear-gradient(120deg, #84fab0 0%, #8fd3f4 100%);
+        overflow-x:hidden;
+      }
+
+      .ch-font{
+        font-family: 'Noto Sans TC', sans-serif;
+      }
+
+      #canvas > canvas{
+        margin-left: 64px;
+        margin-top:32px;
+      }
+
+      .disableSelection{
+        -webkit-touch-callout: none;
+        -webkit-user-select: none;
+        -khtml-user-select: none;
+        -moz-user-select: none;
+        -ms-user-select: none;
+        user-select: none;
+        outline: 0;
+      }
+    </style>
+    
+      <link rel="stylesheet" href="./css/animate.css"/>
+  </head>
+
+  <body>    
+    <div id="inputNameDiv" class="animated">
+      <input style="width: 300px; padding: 20px; cursor: pointer; box-shadow: 6px 6px 5px; #999; -webkit-box-shadow: 6px 6px 5px #999; -moz-box-shadow: 6px 6px 5px #999; font-weight: bold; background: #ffff00; color: #000; border-radius: 10px; border: 1px solid #999; font-size: 150%;" type="button" value="送出" onclick="btnSumbitClick()" />
+      <input id="inputName" placeholder="請輸入你的名字"/>
+    </div>
+
+    <div class="m-toolbar disableSelection">
+      <span class="material-icons menu">menu</span>
+      <span  id="student_name" style="margin-left:24px;font-weight:700;font-size:30px;color:white;" class="ch-font">學生</span>      
+      <span  id="countdown_timer" style="margin-left:24px;font-weight:700;font-size:30px;color:blue;" class="ch-font"></span>
+    </div>
+
+    <div style="display: flex;display: -webkit-flex;display: -ms-flexbox;margin-top:100px;">
+      <div style="flex: 1 1 auto;" id="canvas">
+        <!-- This -->
+      </div>
+      <div style="width:300px;min-height: 150px;margin:32px;padding:16px;" class="m-card">
+        <div style="font-size:24px;font-weight:700;" class="ch-font disableSelection">搶答排名</div>
+        <div id="studentRank" style="color:rgba(0,0,0,.8);">
+          <div v-for="item in rank" class="ch-font">
+            {{item}}
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div id="UserScore">
+      <div class="m-card" style="max-width:500px;margin-left:auto;margin-right:auto;min-height:500px;margin-top:100px;">
+      <div style="font-size:24px;font-weight:700;padding:16px 32px;" class="ch-font disableSelection">積分</div>
+      <div style="margin: 0 auto;">
+        <div v-for="(value, key) in userScore" class="ch-font" style="margin:8px 16px;margin-left: 48px;">
+          <!-- {{key}} : 
+          {{value}} -->
+          {{value.Name}} : {{value.Score}}
+        </div>
+      </div>
+    </div>
+
+  </body>
+
+  <script src='./src/student.js'></script>
+</html>

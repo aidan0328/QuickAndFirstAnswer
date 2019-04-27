@@ -1,0 +1,45 @@
+<html>
+  <head>
+    <title>主畫面</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/p5.js/0.7.3/p5.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/p5.js/0.7.3/addons/p5.dom.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/2.2.0/socket.io.js"></script>
+
+    <script src="https://code.jquery.com/jquery-3.4.0.slim.min.js"
+            integrity="sha256-ZaXnYkHGqIhqTbJ6MB4l9Frs/r7U4jlx7ir8PJYBqbI="
+            crossorigin="anonymous"></script>
+
+            <form>
+            <input style="width: 300px; padding: 20px; cursor: pointer; box-shadow: 6px 6px 5px; #999; -webkit-box-shadow: 6px 6px 5px #999; -moz-box-shadow: 6px 6px 5px #999; font-weight: bold; background: #ffff00; color: #000; border-radius: 10px; border: 1px solid #999; font-size: 150%;" type="button" value="我是學生" onclick="btnUserIsStudentClick()" />
+            <input style="width: 300px; padding: 20px; cursor: pointer; box-shadow: 6px 6px 5px; #999; -webkit-box-shadow: 6px 6px 5px #999; -moz-box-shadow: 6px 6px 5px #999; font-weight: bold; background: #ffff00; color: #000; border-radius: 10px; border: 1px solid #999; font-size: 150%;" type="button" value="我是老師" onclick="btnUserIsTeacherClick()" />
+            </form>            
+    <script src="./src/common.js"></script>
+  </head>
+  
+  <body>
+  </body>
+
+
+  <script>
+    //Event
+    function btnUserIsStudentClick() 
+    {       
+      window.location.href = '/student.html';
+    };
+
+    function btnUserIsTeacherClick() 
+    {        
+        password = prompt("請輸入密碼");
+        
+        if( TEACHER_PASSWORD !== password )
+        {
+          alert("密碼錯誤,請重新輸入");
+        }
+        else
+        {
+          window.location.href = '/teacher.html';
+          console.log("/teacher.html");
+        }
+    };
+  </script>
+</html>

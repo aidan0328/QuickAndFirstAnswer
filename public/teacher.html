@@ -1,0 +1,64 @@
+<html>
+    <head>
+      <title>老師</title>
+      <script src="https://cdnjs.cloudflare.com/ajax/libs/p5.js/0.7.3/p5.min.js"></script>
+      <script src="https://cdnjs.cloudflare.com/ajax/libs/p5.js/0.7.3/addons/p5.dom.min.js"></script>  
+      <script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/2.2.0/socket.io.js"></script>
+      <script src="https://code.jquery.com/jquery-3.4.0.slim.min.js"
+              integrity="sha256-ZaXnYkHGqIhqTbJ6MB4l9Frs/r7U4jlx7ir8PJYBqbI="
+              crossorigin="anonymous"></script>
+
+      <script src="./src/common.js"></script>
+
+      <script src="https://cdn.jsdelivr.net/npm/vue"></script>
+
+      <script src="https://www.gstatic.com/firebasejs/5.10.0/firebase.js"></script>
+      <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.4.2/jquery.min.js"></script>
+      <script>
+        // Initialize Firebase
+        var config = {
+            apiKey: "AIzaSyCKeSmliuxYVur2Q02t78sjuEwMA_kxGg0",
+            authDomain: "answer-rank.firebaseapp.com",
+            databaseURL: "https://answer-rank.firebaseio.com",
+            projectId: "answer-rank",
+            storageBucket: "answer-rank.appspot.com",
+            messagingSenderId: "308914427340"
+        };
+        firebase.initializeApp(config);
+      </script>
+  </head>
+
+  <body>
+    <input style="display:none;" id="fileDialog" type="file" accept=".txt"/>
+    <button id="loadStudentList">載入學生清單</button>  
+    <br><br>
+    <button id="sendGeneralQuestion">一般搶答</button>
+    <button id="sendReactionlQuestion">反應搶答</button>
+    <button id="sendColorBlockQuestion">趣味搶答</button>
+    <hr/>      
+    <div id="studentList"></div>
+
+    <div id="studentLiveList">
+        <div> 已上線的學生人數 : {{Object.size(connectedList)}}</div>
+        
+        <div v-for="(value, key) in connectedList">
+            {{ value }}
+        </div>
+        <hr/>
+        <!-- <div v-for="(value, key) in connectedList">
+            {{ value }} - <a href="#" v-on:click="addScore(value)">加分</a> | <a href="#" v-on:click="minusScore(value)">減分</a>
+        </div> -->
+
+        <!-- <div v-for="item in student_list">
+            {{ item }} : <a href="#" v-on:click="addScore(item)"> 加分 </a> | <a href="#" v-on:click="minusScore(item)"> 減分 </a>
+        </div> -->
+        <div v-for="(value, key) in student">
+            {{value.State}}{{ value.Name }} : {{value.Score}} | <a href="#" v-on:click="addScore(value.Name)">加分</a> | <a href="#" v-on:click="minusScore(value.Name)">減分</a>
+        </div>
+
+    </div>
+    <hr/>
+    <div id="answerRank"></div>
+  </body>  
+  <script src="./src/teacher.js"></script>
+</html>
