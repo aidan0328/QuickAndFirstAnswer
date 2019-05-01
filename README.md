@@ -28,6 +28,8 @@
 6. 執行成功的話，會看到以下這樣的訊息，然後就可以開始**用瀏覽器使用"先搶先答"**
 	*在瀏覽器的網址請輸入 xxx.xxx.xxx.xxx:8080*
 	(xxx.xxx.xxx.xxx 是你電腦的 IP)
+
+*老師頁面的密碼是123*
 	
 ## Get Started in Linux and Mac(OSX):
 
