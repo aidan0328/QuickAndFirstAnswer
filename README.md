@@ -40,17 +40,19 @@ If you don't have Git on your PC or Mac, using your OS default package manager t
 	* On Mac (OSX) - Already built into system, if not, using `apt-get` to install (you need to install Java first): 
 		`apt-get install git`
 	* On Linux - Maybe system are already in-built. if not, also using package manager to install git.
+	
+	More infomatoin about git installation, find out more on offical website: https://www.atlassian.com/git/tutorials/install-git
 
 3. Install Node.js:
-	If Node.js haven't installed on your PC or Mac, or not sure. Please follow the step:
+	If Node.js haven't installed on your PC or Mac, or not sure. Please follow these steps:
 	1. typing `node -v` to checkout the version of Node.js
 	2. If got a error which said that command not found, meaning your computer haven't installed Node.js
 	3. Install Node.js using package manager: `sudo apt-get install nodejs npm`
 	4. Then done! you're ready to go!
-4. Update Npm: `npm -g i` and `npm i` to install project node_modules
-5. Enter your project dir: `cd QuickAndFirstAnswer`
+4. Enter your project dir: `cd QuickAndFirstAnswer`
+5. Update Npm: `npm -g i` and `npm i` to install project node_modules 
 6. Host the server: `node server.js`
-7. Then launch web browser `http://localhost:8080`
+7. Then launch web browser `http://localhost:8080` or using `http://your-ip-or-dns:8080`
 
 # Credit
 * [@ljcucc](https://github.com/ljcucc)
