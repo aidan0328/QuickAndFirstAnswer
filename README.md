@@ -58,4 +58,4 @@ If you don't have Git on your PC or Mac, using your OS default package manager t
 
 # Credit
 * [@ljcucc](https://github.com/ljcucc)
-* @aidan0328
+* [@aidan0328](https://github.com/aidan0328)
