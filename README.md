@@ -47,7 +47,7 @@ If you don't have Git on your PC or Mac, using your OS default package manager t
 	2. If got a error which said that command not found, meaning your computer haven't installed Node.js
 	3. Install Node.js using package manager: `sudo apt-get install nodejs npm`
 	4. Then done! you're ready to go!
-4. Update Npm: `npm -g i`
+4. Update Npm: `npm -g i` and `npm i` to install project node_modules
 5. Enter your project dir: `cd QuickAndFirstAnswer`
 6. Host the server: `node server.js`
 7. Then launch web browser `http://localhost:8080`
