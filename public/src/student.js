@@ -181,9 +181,10 @@ var socketEvents = {
 };
 
 socket.on("event",e=>{
-  if(e.eventName){
+  if(e.eventName && typeof socketEvents[e.eventName] == "function"){
     socketEvents[e.eventName](e.data);
   }else{
+    console.log(socketEvents[e.eventName]);
     throw "Event not exist";
   }
 });
