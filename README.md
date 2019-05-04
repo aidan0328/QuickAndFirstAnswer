@@ -1,3 +1,6 @@
+# dev_feature_ljcucc branch description
+**dev_feature_ljcucc** is a branch that working on doing new feature.
+
 # 先搶先答
 搶答時，當有很多人都舉手要答題時，總會讓我不知道該怎麼公平的選人來回答問題!!!
 那就透過"先搶先答"來幫我選人
