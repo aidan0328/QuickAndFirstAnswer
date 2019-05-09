@@ -2,6 +2,8 @@
 搶答時，當有很多人都舉手要答題時，總會讓我不知道該怎麼公平的選人來回答問題!!!
 那就透過"先搶先答"來幫我選人
 
+*老師頁面的密碼是123*
+
 # 目錄：
  * Get Started in Windows
  * Get Started in Linux or Mac(OSX)
@@ -29,7 +31,7 @@
 	*在瀏覽器的網址請輸入 xxx.xxx.xxx.xxx:8080*
 	(xxx.xxx.xxx.xxx 是你電腦的 IP)
 
-*老師頁面的密碼是123*
+
 	
 ## Get Started in Linux and Mac(OSX):
 
