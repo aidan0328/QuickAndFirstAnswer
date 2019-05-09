@@ -36,6 +36,18 @@ var countDownTimer;
 var processTimer;
 var timeoutTimer;
 
+
+function load()
+{  
+  var cookie = getCookie("student");
+  console.log("getCookie(student) : " + cookie);
+  
+  if(null !== getCookie("student"))
+  {
+    document.getElementById("inputName").value = cookie;
+  }
+}
+
 function setup() {
   answerArea.canvas = createCanvas(answerArea.canvasWidth, answerArea.canvasHeight);
   answerArea.canvas.parent('canvas');
@@ -62,7 +74,7 @@ function setup() {
       return a.Score > b.Score ? -1: 1;
     });
     scoreApp.userScore = list;
-  });
+  });  
 }
 
 function draw() {
@@ -106,10 +118,13 @@ function sendStudentName()
   studentName = $("#inputName").val().trim();
   $("#inputNameDiv").addClass("fadeOut");
   $("#student_name").text(studentName);
+
+  console.log("sendStudentName");
+  setCookie("student", studentName);
+  
   setTimeout(()=>{
     $("#inputNameDiv").hide();
   },510);  
-
 }
 function btnSumbitClick() {
   sendStudentName();
