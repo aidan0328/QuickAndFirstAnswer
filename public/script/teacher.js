@@ -39,6 +39,7 @@ function setup() {
   var btnSendGeneralQuestion = document.querySelector("#sendGeneralQuestion");
   var btnSendReactionlQuestion = document.querySelector("#sendReactionlQuestion");
   var btnSendColorBlockQuestion = document.querySelector("#sendColorBlockQuestion");
+  var btnSendColorNumberkQuestion = document.querySelector("#sendColorNumberQuestion");
   
   var colorBlock = {
     originX : 10,
@@ -129,8 +130,8 @@ function setup() {
       var value = JSON.stringify({
         type : type,
         rect : rect,
-        interval : 1000,
-        timeout : 8000
+        interval : 800,
+        timeout : 800*10
       });
     }
     else
@@ -177,7 +178,7 @@ function setup() {
     var value = JSON.stringify({
       type:"ColorBlock",
       ColorBlock:colorBlock,
-      timeout : 15000
+      timeout : 8000
     });
 
     studentList = [];
@@ -186,7 +187,45 @@ function setup() {
     eventCall("TeacherSendStudentRank",studentList); //Send a event with value
   });
 
-  
+  btnSendColorNumberkQuestion.addEventListener("click",e=>{
+    var color = (getRandomInt(1, 100)%2 == 1) ? "Pinky" : "Blue";
+    var numbers = [];
+    var xPosition = [];
+    var yPosition = [];
+    while(true){
+      var temp = getRandomInt(0, 100);
+      var x = getRandomInt(rect.left, rect.right);
+      var y = getRandomInt(rect.top, rect.bottom);
+
+      if( -1 == numbers.indexOf(temp)){
+        numbers.push(temp);
+
+        xPosition.push(x);
+        yPosition.push(y);
+      }
+      if(numbers.length >= 8)
+        break;
+    }    
+
+    var value = JSON.stringify({
+      type:"NumberOrderByColor",
+      Color:color,
+      Numbers: numbers,
+      XPosition : xPosition,
+      YPosition : yPosition,
+      Timeout : 20000
+    });
+    console.log("Color : " + color);
+    console.log("Numbers : " + numbers);
+    console.log("X Position : " + xPosition);
+    console.log("Y Position : " + yPosition);
+    
+    studentList = [];
+    $("#answerRank").text(JSON.stringify(studentList));
+    eventCall("TeacherSendStudentRank",studentList); //Send a event with value
+    eventCall("TeacherSendQuestion",value); //Send a event with value    
+  });
+
   var socketEvents = {
     student_answer,
     student_enter,
@@ -244,6 +283,7 @@ function setup() {
     socket.emit("TeacherEnter");    
   })
 })();
+
   function addScore(name,value){
     dataBaseRoot = database.ref(RealTime_DB_Path);
   

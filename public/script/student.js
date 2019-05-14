@@ -2,7 +2,8 @@ const ANSWAER_TYPE = {
   Gerenal : 0,
   FixedButtonPosition : 1,
   RandomButtonPosition : 2,
-  ColorBlock : 3
+  ColorBlock : 3,
+  ColorNumberBtn : 4
 };
 
 var dataBaseRoot;
@@ -52,11 +53,10 @@ function setup() {
   answerArea.canvas = createCanvas(answerArea.canvasWidth, answerArea.canvasHeight);
   answerArea.canvas.parent('canvas');
 
-  button1 = createButton('按我!');      
+  button1 = createButton('按我!');
   button1.hide();
   button1.position(0, 0);  
   button1.mousePressed(click);
-
     
   database.ref(RealTime_DB_Path).on('value', function(snapshot) {
     //console.log(snapshot.val());
@@ -212,6 +212,9 @@ function eventCall(eventName,data){
 }
 
 function TeacherSendQuestion(e){
+  
+  console.log("Type : " + JSON.parse(e).type);
+  
   if(timeoutTimer)
     clearTimeout(timeoutTimer);
 
@@ -222,6 +225,12 @@ function TeacherSendQuestion(e){
   answerArea.canvas.hide();
 
   countDownTimer = 0;
+  
+  $("#description").text('');
+  colorNumberButtons.forEach(function(button){     
+    button.remove();
+  });
+
   switch(JSON.parse(e).type){
     case "BtnFixedPosition": 
       answerType = ANSWAER_TYPE.FixedButtonPosition;
@@ -229,17 +238,23 @@ function TeacherSendQuestion(e){
       button1.show();
       break;
 
-      case 'BtnRandomPosition' :
-        answerType = ANSWAER_TYPE.RandomButtonPosition;
-        RandomBtnPos(e);
-        button1.show();
-        break;
+    case 'BtnRandomPosition' :
+      answerType = ANSWAER_TYPE.RandomButtonPosition;
+      RandomBtnPos(e);
+      button1.show();
+      break;
 
-      case "ColorBlock" : 
-        answerType = ANSWAER_TYPE.ColorBlock;
-        DrawColorBlock(e);
-        answerArea.canvas.show();
-        break;
+    case "ColorBlock" : 
+      answerType = ANSWAER_TYPE.ColorBlock;
+      DrawColorBlock(e);
+      answerArea.canvas.show();
+      break;
+
+    case "NumberOrderByColor" : 
+        answerType = ANSWAER_TYPE.ColorNumberBtn;
+        DrawColorNumberBtn(e);
+        //answerArea.canvas.show();
+        break;        
   }
   $("#countdown_timer").text('倒數 : ' + countDownTimer/1000 + ' 秒');  
 }
@@ -260,14 +275,14 @@ function intervalFunc(rect, interval){
   button1.position(x, y);
 
   countDownTimer -= interval;
-  // if(countDownTimer>0)
-  // {
-  //   $("#countdown_timer").text('倒數 : ' + countDownTimer/1000 + ' 秒');
-  // }
-  // else
-  // {
-  //   $("#countdown_timer").text('時間到了');
-  // }
+  if(countDownTimer>0)
+  {
+    $("#countdown_timer").text('倒數 : ' + countDownTimer/1000 + ' 秒');
+  }
+  else
+  {
+    $("#countdown_timer").text('時間到了');
+  }
 }
 
 function RandomBtnPos(e){
@@ -293,14 +308,15 @@ function BtnPos(e){
 
 function countDown(interval){
   countDownTimer -= interval;
-  // if(countDownTimer>0)
-  // {
-  //   $("#countdown_timer").text('倒數 : ' + countDownTimer/1000 + ' 秒');
-  // }
-  // else
-  // {
-  //   $("#countdown_timer").text('時間到了');
-  // }
+
+  if(countDownTimer>0)
+  {
+    $("#countdown_timer").text('倒數 : ' + countDownTimer/1000 + ' 秒');
+  }
+  else
+  {
+    $("#countdown_timer").text('時間到了');
+  }  
 }
 
 function DrawColorBlock (obj){
@@ -315,6 +331,105 @@ function DrawColorBlock (obj){
     answerArea.canvas.hide();
   }
   ,timeout);
+}
+
+var colorNumberResult = false;
+var colorOrder = [];
+var colorNumberLength = 0;
+var colorNumberColor;
+var colorNumberButtons = [];
+function colorNumberClicked(){
+
+  var number = Number(this.elt.innerText); 
+  var result = true;
+  
+  this.hide();
+
+  if(colorOrder.length>0){
+    if('Pinky' == colorNumberColor)
+    {
+      console.log('#1 : ' + colorNumberColor);
+      console.log('In : ' + number);
+      console.log('last : ' + colorOrder[colorOrder.length-1])
+      if(number>colorOrder[colorOrder.length-1])
+        result = false;
+    }
+    else  
+    {
+      console.log('#2 : ' + colorNumberColor);
+      console.log('In : ' + number);
+      console.log('last : ' + colorOrder[colorOrder.length-1])
+
+      if(number<colorOrder[colorOrder.length-1])
+        result = false;
+    }
+  }
+  
+  if( false == result){
+    colorNumberButtons.forEach(function(button){     
+      button.show();
+    });
+    colorOrder = [];
+    return;
+  }
+  colorOrder.push(number);
+
+  
+  if(colorOrder.length == colorNumberLength)
+  {
+    colorNumberResult = true;
+  }
+  if ( true == colorNumberResult)
+    eventCall("student_answer", {"Name" : studentName});
+
+  console.log (colorOrder);    
+}
+
+function DrawColorNumberBtn(obj)
+{
+  var timeout = JSON.parse(obj).Timeout;
+  var color = JSON.parse(obj).Color;
+  var numbers = JSON.parse(obj).Numbers;
+  var xPosition = JSON.parse(obj).XPosition;
+  var yPosition = JSON.parse(obj).YPosition;
+
+  colorNumberResult = false;
+  colorOrder = [];
+  colorNumberLength = numbers.length;
+  colorNumberColor = color;
+
+  colorNumberButtons = new Array(numbers.length);
+
+  var i=0;
+  numbers.forEach(function(number) {
+    //console.log(number);
+    colorNumberButtons[i] = createButton(number);
+    colorNumberButtons[i].position(xPosition[i], yPosition[i]);
+    colorNumberButtons[i].mousePressed(colorNumberClicked)
+    if('Pinky' == color){
+      colorNumberButtons[i].attribute("class", "button pinky");
+      $("#description").text('由大到小');
+    }
+    else{
+      colorNumberButtons[i].attribute("class", "button blue");
+      $("#description").text('由小到大');
+    }
+    i++;
+  });
+
+  
+  
+  countDownTimer = timeout;
+  processTimer = setInterval(countDown, 1000, 1000);
+  timeoutTimer = setTimeout(function(){
+    clearInterval(processTimer);
+
+    colorNumberButtons.forEach(function(button){     
+      button.remove();
+    });
+  }
+  ,timeout);  
+  
 }
 
 
