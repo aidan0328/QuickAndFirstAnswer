@@ -1,7 +1,11 @@
+//Import
 var express = require('express');
 var app = express();
 var http = require('http').Server(app);
 var io = require('socket.io')(http);
+var openBrowser = require("open");
+
+//Global variable
 var serverIP;
 
 //-------------------------------
@@ -31,6 +35,7 @@ io.on('connection', function(socket){
 
 http.listen(8080, function(){
   console.log('在瀏覽器的網址請輸入 ' + serverIP +':8080');
+  openBrowser(serverIP +':8080');
 });
 
 var teacherSocket = null;
