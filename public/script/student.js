@@ -57,24 +57,6 @@ function setup() {
   button1.hide();
   button1.position(0, 0);  
   button1.mousePressed(click);
-    
-  database.ref(RealTime_DB_Path).on('value', function(snapshot) {
-    //console.log(snapshot.val());
-    var temp = snapshot.val();
-    var list = [];
-
-    for(var index in temp){      
-      var obj = {
-        Name : index,
-        Score : temp[index]
-      };
-      list.push(obj);
-    }
-    list = list.sort(function(a, b){
-      return a.Score > b.Score ? -1: 1;
-    });
-    scoreApp.userScore = list;
-  });  
 }
 
 function draw() {
@@ -96,12 +78,6 @@ function draw() {
   }
 }
 
-//Send a event
-function sendEvent(message,value){
-  socket.emit(message,value); //The sendEvnt will send Event name, 
-                          //Like broadcast in Scratch, and a value to another event listener.
-}
-
 function windowResized() {  
   resizeCanvas(windowWidth, windowHeight);
   colorBlock.refresh = true;
@@ -118,10 +94,8 @@ function sendStudentName()
   studentName = $("#inputName").val().trim();
   $("#inputNameDiv").addClass("fadeOut");
   $("#student_name").text(studentName);
-
-  console.log("sendStudentName");
-  setCookie("student", studentName);
   
+  setCookie("student", studentName);  
   setTimeout(()=>{
     $("#inputNameDiv").hide();
   },510);  
@@ -129,6 +103,7 @@ function sendStudentName()
 function btnSumbitClick() {
   sendStudentName();
   socket.emit("student_enter", studentName);
+  console.log('Tx student_enter');
 }
 
 function keyTyped() {
@@ -136,6 +111,7 @@ function keyTyped() {
 
   sendStudentName();
   socket.emit("student_enter", studentName);
+  console.log('Tx student_enter');
 }
 
 function mouseClicked() {
@@ -189,6 +165,7 @@ var scoreApp = new Vue({
 });
 
 var socketEvents = {
+  TeacherState,
   TeacherSendQuestion,
   TeacherSendStudentRank,
   TeacherEnter,
@@ -211,6 +188,32 @@ function eventCall(eventName,data){
   })
 }
 
+function TeacherState(e)
+{
+  console.log('TeacherState');
+  switch(JSON.parse(e).type){
+    case "Ready": 
+      var dbPath = JSON.parse(e).DB_Path;
+      database.ref(dbPath).on('value', function(snapshot) {
+        //console.log(snapshot.val());
+        var temp = snapshot.val();
+        var list = [];
+
+        for(var index in temp){      
+          var obj = {
+            Name : index,
+            Score : temp[index]
+          };
+          list.push(obj);
+        }
+        list = list.sort(function(a, b){
+          return a.Score > b.Score ? -1: 1;
+        });
+        scoreApp.userScore = list;
+      });
+      break;
+  }
+}
 function TeacherSendQuestion(e){
   
   console.log("Type : " + JSON.parse(e).type);

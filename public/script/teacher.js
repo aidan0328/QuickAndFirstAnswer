@@ -1,38 +1,152 @@
+const socket = io();
+var realTimeDBPath;
 var studentList = [];
 var database = firebase.database();
 var dataBaseRoot;
 
-function setup() {
-  database.ref(RealTime_DB_Path).on('value', function(snapshot) {
-    app.studentScore = [];
-    var temp = snapshot.val();
-    for(var index in temp){      
-      var obj = {
-        Name : index,
-        Score : temp[index]
-      };
-      app.studentScore.push(obj);
-    }
-    for(var i in app.student ){
-      for(var j in app.studentScore){
-        if( app.student[i].Name == app.studentScore[j].Name) {
-          app.student[i].Score = app.studentScore[j].Score;
-          //console.log('Name : ' + app.student[i].Name + ' Score : ' + app.student[i].Score);
+var schoolSelector;
+var classSelector;
+var realTimeDB_data;
 
-          Vue.set(app.student, i,{
-            Name : app.studentScore[j].Name,
-            Score : app.studentScore[j].Score,
-            State : app.student[i].State
-          });
+function eventCall(eventName,data){
+  socket.emit("event_call",{
+    eventName,
+    data
+  })
+}
+
+function SendRealTimeDBPath()
+{
+  if( null != realTimeDBPath){
+    var value = JSON.stringify({
+      type:"Ready",
+      DB_Path:realTimeDBPath,
+    });    
+    eventCall("TeacherState",value); //Send a event with value  
+    console.log('Send TeacherState');
+  }
+}
+function selectClassrom() {
+  var selectedSchoole = schoolSelector.value();
+  var selectedClassroom = classSelector.value();
+  realTimeDBPath = '/'+ selectedSchoole  + '/' + selectedClassroom + '/';
+
+  /* 根據選定的班級，載入學生名單與分數 */
+  for(var schoole in realTimeDB_data){
+    if(schoole == selectedSchoole) {
+      for(var classroom in realTimeDB_data[schoole]){
+        if(classroom == selectedClassroom) {        
+          var studentList = [];
+          for(var student in realTimeDB_data[schoole][classroom]){
+            studentList.push(student);
+          }
+          var text="";
+          for(var index in studentList){
+            text += studentList[index];
+            if(index < (studentList.length-1))
+              text += '\n';
+          }
+          displayStudentList(text);
+          break;
         }
       }
     }
-  });
+  }
+
+  database.ref(realTimeDBPath).on('value', function(snapshot) 
+  {
+      app.studentScore = [];
+      var temp = snapshot.val();
+      for(var index in temp){      
+        var obj = {
+          Name : index,
+          Score : temp[index]
+        };
+        app.studentScore.push(obj);
+      }
+      for(var i in app.student ){
+        for(var j in app.studentScore){
+          if( app.student[i].Name == app.studentScore[j].Name) {
+            app.student[i].Score = app.studentScore[j].Score;
+
+            Vue.set(app.student, i,{
+              Name : app.studentScore[j].Name,
+              Score : app.studentScore[j].Score,
+              State : app.student[i].State
+            });
+          }
+        }
+      }
+    });
+    SendRealTimeDBPath();
+}
+
+function selectSchool() {
+  var selectedSchoole = schoolSelector.value();
+
+  /* 根據選定的學校，從 RealTime DB 載入班級清單 */
+  if( selectedSchoole in realTimeDB_data){  
+    for(var schoole in realTimeDB_data){
+      if(schoole == selectedSchoole) {
+        if( null != classSelector)
+          classSelector.remove();
+        classSelector = createSelect();
+        classSelector.position(550, 8);
+        classSelector.option('請選擇班級');
+        for(var classroom in realTimeDB_data[schoole]){
+          classSelector.option(classroom);
+        }
+        classSelector.changed(selectClassrom);
+      }
+    }
+  }  
+}
+
+function setup() {   
+  /* 從 RealTime DB 載入學校清單 */
+  database.ref("/").once('value', function(snapshot) {
+    realTimeDB_data = snapshot.val();
+    schoolSelector = createSelect();
+    schoolSelector.option('請選擇學校');
+    schoolSelector.position(300, 8);
+    for(var item in realTimeDB_data){
+      schoolSelector.option(item);
+    }
+    schoolSelector.changed(selectSchool);
+  });  
+}
+
+function displayStudentList(text){
+
+  var originList = text.split("\n");
+  app.student_list = [];
+  app.student = [];
+  for(var index in originList){
+    var name = originList[index].split(":")[0]
+    app.student_list[index] = name;
+    app.student[index] = {Name:name, Score:0, State:''};
+  }
+  
+  for(var i in app.student ){
+    for(var j in app.studentScore){
+      if( app.student[i].Name == app.studentScore[j].Name) {
+        app.student[i].Score = app.studentScore[j].Score;          
+      }
+    }
+  }
+
+  for(var i in app.student ){
+    for(var j in app.connectedList){
+      if( app.student[i].Name == app.connectedList[j]) {
+        app.student[i].State = 'V  ';
+      }
+    }
+  }
 }
 
 (function(){
   //Import
-  const socket = io();
+  
 
   //Global Variables
   var btnLoadStudentList = document.querySelector("#loadStudentList");
@@ -83,33 +197,7 @@ function setup() {
     chooseFile('#fileDialog',displayStudentList);
   });
 
-  function displayStudentList(text){
-
-    var originList = text.split("\n");
-    app.student_list = [];
-    app.student = [];
-    for(var index in originList){
-      var name = originList[index].split(":")[0]
-      app.student_list[index] = name;
-      app.student[index] = {Name:name, Score:0, State:''};
-    }
-    
-    for(var i in app.student ){
-      for(var j in app.studentScore){
-        if( app.student[i].Name == app.studentScore[j].Name) {
-          app.student[i].Score = app.studentScore[j].Score;          
-        }
-      }
-    }
-
-    for(var i in app.student ){
-      for(var j in app.connectedList){
-        if( app.student[i].Name == app.connectedList[j]) {
-          app.student[i].State = 'V  ';
-        }
-      }
-    }
-  }
+  
   
   function sendCleanAnswerRang(message)
   {
@@ -240,12 +328,7 @@ function setup() {
     }
   })
 
-  function eventCall(eventName,data){
-    socket.emit("event_call",{
-      eventName,
-      data
-    })
-  }
+
 
   function student_answer(e,id){
     if(studentList.indexOf(e.Name) > -1) return;
@@ -262,12 +345,14 @@ function setup() {
   }
   
   function student_enter(name, id){
+    console.log('Rx student_enter');
     Vue.set(app.connectedList,id,name);
     for(var index in app.student){      
       if( name === app.student[index].Name){
         app.student[index].State = 'V  ';
       }
     }
+    SendRealTimeDBPath();
   }
 
   function student_exit(name, id){
@@ -292,7 +377,7 @@ function setup() {
           
       if( false == e.val().hasOwnProperty(name)){
         userRef.set(value);
-      }else{
+      } else {
         userRef.once("value").then(e=>{
           if((Number(e.val()) + value)>=0){
             userRef.set(Number(e.val()) + value)

@@ -1,6 +1,3 @@
-//const SCHOOL = "/zlm"
-const SCHOOL = "/kyps"
-const RealTime_DB_Path = SCHOOL+"/students/";
 
 const TEACHER_PASSWORD = '123'
 var password="";

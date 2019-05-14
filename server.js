@@ -89,6 +89,15 @@ function onConnect(socket){
   })
 
   socket.on("student_enter",e=>{
+
+    if( null != teacherSocket ) {
+      teacherSocket.emit("event",{
+        eventName:'student_enter',
+        data:e,
+        id:socket.id,
+      });     
+    }
+
     for(var i in students) {
       if( e === students[i].Name){
         console.log(e + '已經上線了');
@@ -101,12 +110,5 @@ function onConnect(socket){
       Name : e
     };
     students.push(obj);
-    if( null != teacherSocket ) {
-      teacherSocket.emit("event",{
-        eventName:'student_enter',
-        data:e,
-        id:socket.id,
-      });     
-    }
   })
 }
