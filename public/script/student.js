@@ -66,9 +66,13 @@ function draw() {
     var blockHeight = (answerArea.canvasHeight)/colorBlock.maxVertBlockNumber;;
     for(hori=0; hori <colorBlock.maxHoriBlockNumber; hori++) {
       for(vert=0; vert <colorBlock.maxVertBlockNumber ; vert++) {
-        if ((hori == colorBlock.differentX) && vert == colorBlock.differentY)
-          fill(colorBlock.differentColor);
-        else
+        if ((hori == colorBlock.differentX) && vert == colorBlock.differentY){
+          try{
+            fill(colorBlock.differentColor);
+          }catch(e){
+
+          }
+        }else
           fill(colorBlock.mainColor);
         
         noStroke();

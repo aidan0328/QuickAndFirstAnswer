@@ -370,10 +370,10 @@ function displayStudentList(text){
 })();
 
   function addScore(name,value){
-    dataBaseRoot = database.ref(RealTime_DB_Path);
+    dataBaseRoot = database.ref(realTimeDBPath);
   
     dataBaseRoot.once("value").then(e=>{
-      let userRef = database.ref(RealTime_DB_Path+name);
+      let userRef = database.ref(realTimeDBPath+name);
           
       if( false == e.val().hasOwnProperty(name)){
         userRef.set(value);
