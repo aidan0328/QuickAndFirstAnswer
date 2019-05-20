@@ -120,13 +120,20 @@
     <div id="UserScore">
       <div class="m-card" style="max-width:500px;margin-left:auto;margin-right:auto;min-height:500px;margin-top:100px;">
       <div style="font-size:24px;font-weight:700;padding:16px 32px;" class="ch-font disableSelection">積分</div>
-      <div style="margin: 0 auto;">
+      <div style="margin: 0 auto;max-height:100px;overflow-y:hidden;">
         <div v-for="(value, key) in userScore" class="ch-font" style="margin:8px 16px;margin-left: 48px;">
           <!-- {{key}} : 
           {{value}} -->
           {{value.Name}} : {{value.Score}}
         </div>
       </div>
+      <hr/>
+<div v-for="(value, key) in userScore" class="ch-font" v-if="username == value.Name" style="margin:8px 16px;margin-left: 48px;">
+           <!-- {{key}} :
+           {{value}} -->
+           {{value.Name}} : {{value.Score}}
+         </div>
+
     </div>
 
   </body>

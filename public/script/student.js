@@ -116,6 +116,8 @@ function keyTyped() {
   sendStudentName();
   socket.emit("student_enter", studentName);
   console.log('Tx student_enter');
+
+  Vue.set(scoreApp, "username", studentName);
 }
 
 function mouseClicked() {
@@ -164,7 +166,8 @@ var app = new Vue({
 var scoreApp = new Vue({
   el:"#UserScore",
   data:{
-    userScore:{}
+    userScore:{},
+    username:""
   }
 });
 

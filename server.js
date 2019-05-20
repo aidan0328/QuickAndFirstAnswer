@@ -35,7 +35,7 @@ io.on('connection', function(socket){
 
 http.listen(8080, function(){
   console.log('在瀏覽器的網址請輸入 ' + serverIP +':8080');
-  openBrowser(serverIP +':8080');
+  //openBrowser(serverIP +':8080');
 });
 
 var teacherSocket = null;
