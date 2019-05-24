@@ -179,14 +179,24 @@ var Games = {
       }
     },
     mouseClicked:()=>{
-      let c = get(mosueX, mouseY);
-      if(!colorBlock.differentColor) break;
+      var self = Games.FindColorDiff.vars;
+      if(!self.started) return;
+
+      var colorBlock = self.config.ColorBlock;
+
+      var c = get(mouseX, mouseY);
+
+      if(!colorBlock.differentColor) return;
 
       if (( c[0] == colorBlock.differentColor[0])
       &&  ( c[1] == colorBlock.differentColor[1])
       &&  ( c[2] == colorBlock.differentColor[2])){
         eventCall("student_answer", {"Name" : studentName});
+        $("#countdown_timer").text('遊戲結束');
+        self.started = false;
         system.canvas.hide();
+      }else{1
+        console.log("failed")
       }
     },
 
@@ -209,8 +219,8 @@ var Games = {
 
         var colorBlock = self.config.ColorBlock;
         var blockWidth = 
-          (system.canvas.width) / colorBlock.maxHoriBlockNumber;
-        var blockHeight = (system.canvas.height) / colorBlock.maxVertBlockNumber;;
+          (sysConfig.canvas.width) / colorBlock.maxHoriBlockNumber;
+        var blockHeight = (sysConfig.canvas.height) / colorBlock.maxVertBlockNumber;;
         for(hori=0; hori <colorBlock.maxHoriBlockNumber; hori++) {
           for(vert=0; vert <colorBlock.maxVertBlockNumber ; vert++) {
             if ((hori == colorBlock.differentX) && vert == colorBlock.differentY){
@@ -314,13 +324,13 @@ function setup() {
 }
 
 function draw() {
-  if ( true == colorBlock.refresh) {
-    try{
-      rendering();
-    }catch(e){
-      console.log(e);
-    }
-  }
+  // if ( true == colorBlock.refresh) {
+  //   try{
+  //     rendering();
+  //   }catch(e){
+  //     console.log(e);
+  //   }
+  // }
 
   //Run each game of draw()
   for(var index in Games){
@@ -403,35 +413,15 @@ function keyTyped() {
 
 function mouseClicked() {
   for(var index in Games){
-    let game = Games[index];
+    var game = Games[index];
+
     try{
       if(game.mouseClicked)
-        game.mouseClicked();
+      game.mouseClicked();
     }catch(e){
       console.log(e);
     }
   }
-
-  // let c = get(mouseX, mouseY);  
-  // console.log('Mouse Clicked');
-  // switch(answerType)
-  // {
-  //   case ANSWAER_TYPE.FixedButtonPosition:
-  //     clearInterval(processTimer);
-  //     break;
-      
-
-  //   case ANSWAER_TYPE.ColorBlock:
-  //     if(!colorBlock.differentColor) break;
-
-  //     if (( c[0] == colorBlock.differentColor[0])
-  //     &&  ( c[1] == colorBlock.differentColor[1])
-  //     &&  ( c[2] == colorBlock.differentColor[2])){
-  //       eventCall("student_answer", {"Name" : studentName});
-  //       answerArea.canvas.hide();
-  //     }
-  //     break;
-  // }
 }
 
 (function(){
@@ -531,24 +521,15 @@ function TeacherSendQuestion(e){
 
   switch(JSON.parse(e).type){
     case "BtnFixedPosition": 
-      answerType = ANSWAER_TYPE.FixedButtonPosition;
-      // BtnPos(e);
       Games.ForceClick.setup(e);
-      // button1.show();
       break;
 
     case 'BtnRandomPosition' :
-      // answerType = ANSWAER_TYPE.RandomButtonPosition;
-      // RandomBtnPos(e);
       Games.RandomForceClick.setup(e);
-      // button1.show();
       break;
 
     case "ColorBlock" : 
-      answerType = ANSWAER_TYPE.ColorBlock;
-      // DrawColorBlock(e);
       Games.FindColorDiff.setup(e);
-      // answerArea.canvas.show();
       break;
 
     case "NumberOrderByColor" : 
