@@ -128,10 +128,10 @@
         </div>
       </div>
       <hr/>
-<div v-for="(value, key) in userScore" class="ch-font" v-if="username == value.Name" style="margin:8px 16px;margin-left: 48px;">
+        <div v-for="(value, key) in userScore" class="ch-font" v-if="username == value.Name" style="margin:8px 16px;margin-left: 48px;">
            <!-- {{key}} :
            {{value}} -->
-           {{value.Name}} : {{value.Score}}
+           {{username}} : {{value.Score}}
          </div>
 
     </div>

@@ -61,17 +61,21 @@ function setup() {
 
 function draw() {
   if ( true == colorBlock.refresh) {
+    try{
+      rendering();
+    }catch(e){
+      console.log(e);
+    }
+  }
+
+  function rendering(){
     colorBlock.refresh = false;
     var blockWidth = (answerArea.canvasWidth)/colorBlock.maxHoriBlockNumber;
     var blockHeight = (answerArea.canvasHeight)/colorBlock.maxVertBlockNumber;;
     for(hori=0; hori <colorBlock.maxHoriBlockNumber; hori++) {
       for(vert=0; vert <colorBlock.maxVertBlockNumber ; vert++) {
         if ((hori == colorBlock.differentX) && vert == colorBlock.differentY){
-          try{
-            fill(colorBlock.differentColor);
-          }catch(e){
-
-          }
+          fill(colorBlock.differentColor);
         }else
           fill(colorBlock.mainColor);
         
