@@ -174,7 +174,7 @@ var Games = {
       if(millis() - self.timer.timeout > self.config.timeout){
         self.started = false;
         clear();
-        system.canvas.hide();
+        system.canvas.hide()
         $("#countdown_timer").text('時間到了');
       }
     },
