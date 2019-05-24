@@ -33,6 +33,7 @@ var Games = {
         self.started = false;
       });
     },
+
     setup:function (data){
       var self = Games.ForceClick.vars; //Define self variable
 
@@ -48,12 +49,14 @@ var Games = {
 
       self.button1.show(); //Show the button to start the game
     },
+
     end: function(){
       var self = Games.ForceClick.vars; //Define self variable
 
       self.button1.hide(); //Hide button1 when the game is ended.
       self.started = false; //Set started to false which will disable onClick event.
     },
+    
     vars:{
       button1:null,
       started: false
@@ -108,7 +111,7 @@ var Games = {
         self.lasttime.loopTime = millis();
       }
 
-      $("#countdown_timer").text('倒數 : ' + (self.config.timeout - (millis() - self.lasttime.timeLimit))  /1000 + ' 秒');
+      $("#countdown_timer").text('倒數 : ' + ((self.config.timeout - (millis() - self.lasttime.timeLimit))  /1000).toFixed(2) + ' 秒');
 
       if(millis() - self.lasttime.timeLimit > self.config.timeout){ //If limit of time is over, stop the game
         self.started = false;
