@@ -1,3 +1,151 @@
+//Import
+const socket = io();
+const database = firebase.database();
+
+//Global variables
+
+//System config const
+const sysConfig = {  
+  canvas:{
+    width:700,
+    height:500
+  }
+};
+
+//System varibales
+var system = {
+  canvas:null
+}
+
+//Games object
+var Games = {
+  ForceClick:{
+    init:()=>{
+      var self = Games.ForceClick.vars; //Define self variable
+
+      self.button1 = createButton('按我!');
+      self.button1.hide();
+      self.button1.position(0, 0);  
+
+      self.button1.mousePressed(function(){
+        eventCall("student_answer", {"Name" : studentName});
+        self.button1.hide();
+        self.started = false;
+      });
+    },
+    setup:function (data){
+      var self = Games.ForceClick.vars; //Define self variable
+
+      self.started = true;
+
+      var buttonPosition = JSON.parse(data);
+      self.button1.position(
+        buttonPosition.x,
+        buttonPosition.y
+      );
+
+      Vue.set(StudentRank,"rank",[]); //Clean the Student Rank list
+
+      self.button1.show(); //Show the button to start the game
+    },
+    end: function(){
+      var self = Games.ForceClick.vars; //Define self variable
+
+      self.button1.hide(); //Hide button1 when the game is ended.
+      self.started = false; //Set started to false which will disable onClick event.
+    },
+    vars:{
+      button1:null,
+      started: false
+    }
+  },
+
+  RandomForceClick:{
+    init:()=>{
+      var self = Games.RandomForceClick.vars; //Define self variable
+      self.button1 = createButton('按不到我!');
+      self.button1.hide();
+      self.button1.position(0, 0);
+
+      self.button1.mousePressed(function(){
+        eventCall("student_answer", {"Name" : studentName});
+        self.started = false;
+        self.button1.hide();
+
+        $("#countdown_timer").text('遊戲結束');
+      });
+    },
+
+    setup:(data)=>{
+      var self = Games.RandomForceClick.vars; //Define self variable
+
+      self.started = true;
+
+      Vue.set(StudentRank,"rank",[]); //Clean the Student Rank list
+
+      self.config = JSON.parse(data); //Set some config data lile:
+      /*  * rect
+          * interval
+          * timeout
+      */
+
+      self.button1.show(); //Show the button to start the game
+      self.lasttime.timeLimit = millis(); //Start timer.
+      self.lasttime.loopTime = millis();
+    },
+
+    draw:function(){
+      var self = Games.RandomForceClick.vars; //Define self variable
+      if(!self.started) return; //If this game isn't start yet, break it.
+
+      if(millis() - self.lasttime.loopTime > self.config.interval){
+        var rect = self.config.rect;
+
+        var x = getRandomInt(rect.left, rect.right);
+        var y = getRandomInt(rect.top, rect.bottom);
+        self.button1.position(x, y);
+
+        self.lasttime.loopTime = millis();
+      }
+
+      $("#countdown_timer").text('倒數 : ' + (self.config.timeout - (millis() - self.lasttime.timeLimit))  /1000 + ' 秒');
+
+      if(millis() - self.lasttime.timeLimit > self.config.timeout){ //If limit of time is over, stop the game
+        self.started = false;
+        self.button1.hide();
+        $("#countdown_timer").text('時間到了');
+      }
+    },
+
+    end: ()=>{
+      var self = Games.RandomForceClick.vars; //Define self variable
+
+      //Why not end the game?
+      self.button1.hide();
+      self.started = false;
+    },
+
+    vars:{
+      button1:null,
+      started:false,
+      lasttime:{
+        timeLimit:0,
+        loopTime:0
+      },
+      config:{} //Some of config files
+    }
+  }
+}
+
+//Socket events
+var socketEvents = {
+  TeacherState,
+  TeacherSendQuestion,
+  TeacherSendStudentRank,
+  TeacherEnter,
+  TeacherExit
+};
+
 const ANSWAER_TYPE = {
   Gerenal : 0,
   FixedButtonPosition : 1,
@@ -7,8 +155,6 @@ const ANSWAER_TYPE = {
 };
 
 var dataBaseRoot;
-
-const socket = io();
 var studentName = null;
 var btnUserIsStudent;
 var btnUserIsTeacher;
@@ -37,9 +183,8 @@ var countDownTimer;
 var processTimer;
 var timeoutTimer;
 
-
-function load()
-{  
+//Events
+window.addEventListener("load",function(){  
   var cookie = getCookie("student");
   console.log("getCookie(student) : " + cookie);
   
@@ -47,22 +192,50 @@ function load()
   {
     document.getElementById("inputName").value = cookie;
   }
-}
+});
+
 
 function setup() {
-  answerArea.canvas = createCanvas(answerArea.canvasWidth, answerArea.canvasHeight);
-  answerArea.canvas.parent('canvas');
+  // answerArea.canvas = createCanvas(answerArea.canvasWidth, answerArea.canvasHeight);
+  // answerArea.canvas.parent('canvas');
 
-  button1 = createButton('按我!');
-  button1.hide();
-  button1.position(0, 0);  
-  button1.mousePressed(click);
+  system.canvas = createCanvas(sysConfig.canvas.width, sysConfig.canvas.height);
+  system.canvas.parent('canvas');
+
+  //Run each game init
+  for(var index in Games){
+    var game = Games[index];
+
+    if(typeof game != "object") continue;
+
+    try{
+      game.init();
+    }catch(e){
+      console.log(e);
+    }
+  }
+
+  // button1 = createButton('按我!');
+  // button1.hide();
+  // button1.position(0, 0);  
+  // button1.mousePressed(click);
 }
 
 function draw() {
   if ( true == colorBlock.refresh) {
     try{
       rendering();
+    }catch(e){
+      console.log(e);
+    }
+  }
+
+  //Run each game of draw()
+  for(var index in Games){
+    var game = Games[index];
+
+    try{
+      game.draw();
     }catch(e){
       console.log(e);
     }
@@ -86,14 +259,25 @@ function draw() {
   }
 }
 
+// function click(){
+//   eventCall("student_answer", {"Name" : studentName});
+
+//   for(var index in Games){
+//     var game = Games[index];
+
+//     try{
+//       game.on.click();
+//     }catch(e){
+//       console.log(e);
+//     }
+//   }
+//   // button1.hide();
+// }
+
+
 function windowResized() {  
   resizeCanvas(windowWidth, windowHeight);
   colorBlock.refresh = true;
-}
-
-function click(){
-  eventCall("student_answer", {"Name" : studentName});
-  button1.hide();
 }
 
 function sendStudentName()
@@ -121,7 +305,7 @@ function keyTyped() {
   socket.emit("student_enter", studentName);
   console.log('Tx student_enter');
 
-  Vue.set(scoreApp, "username", studentName);
+  Vue.set(scoreStudentRank, "username", studentName);
 }
 
 function mouseClicked() {
@@ -129,9 +313,6 @@ function mouseClicked() {
   console.log('Mouse Clicked');
   switch(answerType)
   {
-    case ANSWAER_TYPE.FixedButtonPosition:
-      break;
-
     case ANSWAER_TYPE.FixedButtonPosition:
       clearInterval(processTimer);
       break;
@@ -154,34 +335,24 @@ function mouseClicked() {
   console.log("Programming is running...");
  
   socket.on("AnswerRank",answerList=>{
-    app.rank = answerList;
+    StudentRank.rank = answerList;
   });
 })();
 
-const database = firebase.database();
-
-var app = new Vue({
+var StudentRank = new Vue({
   el:"#studentRank",
   data:{
     rank:[]
   }  
 });
 
-var scoreApp = new Vue({
+var scoreStudentRank = new Vue({
   el:"#UserScore",
   data:{
     userScore:{},
     username:""
   }
 });
-
-var socketEvents = {
-  TeacherState,
-  TeacherSendQuestion,
-  TeacherSendStudentRank,
-  TeacherEnter,
-  TeacherExit
-};
 
 socket.on("event",e=>{
   if(e.eventName && typeof socketEvents[e.eventName] == "function"){
@@ -220,7 +391,7 @@ function TeacherState(e)
         list = list.sort(function(a, b){
           return a.Score > b.Score ? -1: 1;
         });
-        scoreApp.userScore = list;
+        scoreStudentRank.userScore = list;
       });
       break;
   }
@@ -235,8 +406,18 @@ function TeacherSendQuestion(e){
   if(processTimer)
     clearInterval(processTimer);
 
-  button1.hide();
-  answerArea.canvas.hide();
+  //Stop all games when another game is starting
+  for(var index in Games){
+    var game = Games[index];
+
+    try{
+      game.end();
+    }catch(e){
+      console.log(e);
+    }
+  }
+
+  system.canvas.hide();
 
   countDownTimer = 0;
   
@@ -248,14 +429,16 @@ function TeacherSendQuestion(e){
   switch(JSON.parse(e).type){
     case "BtnFixedPosition": 
       answerType = ANSWAER_TYPE.FixedButtonPosition;
-      BtnPos(e);
-      button1.show();
+      // BtnPos(e);
+      Games.ForceClick.setup(e);
+      // button1.show();
       break;
 
     case 'BtnRandomPosition' :
-      answerType = ANSWAER_TYPE.RandomButtonPosition;
-      RandomBtnPos(e);
-      button1.show();
+      // answerType = ANSWAER_TYPE.RandomButtonPosition;
+      // RandomBtnPos(e);
+      Games.RandomForceClick.setup(e);
+      // button1.show();
       break;
 
     case "ColorBlock" : 
@@ -274,7 +457,7 @@ function TeacherSendQuestion(e){
 }
 
 function TeacherSendStudentRank(e){
-  app.rank = e;
+  StudentRank.rank = e;
 }
 
 function TeacherExit(e){
@@ -306,6 +489,7 @@ function RandomBtnPos(e){
   var timeout = json.timeout;
 
   countDownTimer = timeout;  
+  setInterval()
   processTimer = setInterval(intervalFunc, interval, rect, interval);
   timeoutTimer = setTimeout(function(){
     clearInterval(processTimer);
@@ -314,11 +498,11 @@ function RandomBtnPos(e){
   ,timeout);
 }
 
-function BtnPos(e){
-  var pos = JSON.parse(e);
-  button1.position(pos.x, pos.y);
-  $("#studenRank").html('');
-}
+// function BtnPos(e){
+//   var pos = JSON.parse(e);
+//   button1.position(pos.x, pos.y);
+//   $("#studenRank").html('');
+// }
 
 function countDown(interval){
   countDownTimer -= interval;
@@ -445,5 +629,3 @@ function DrawColorNumberBtn(obj)
   ,timeout);  
   
 }
-
-
