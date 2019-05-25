@@ -114,5 +114,5 @@ function onConnect(socket){
       Name : e
     };
     students.push(obj);
-  })
+  });
 }

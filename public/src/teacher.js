@@ -410,3 +410,6 @@ function displayStudentList(text){
   });
 
 
+function StudentReload(){
+  eventCall("StudentReload","");
+}

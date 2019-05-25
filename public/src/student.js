@@ -245,7 +245,10 @@ var socketEvents = {
   TeacherSendQuestion,
   TeacherSendStudentRank,
   TeacherEnter,
-  TeacherExit
+  TeacherExit,
+  StudentReload:e=>{
+    location.reload();
+  }
 };
 
 const ANSWAER_TYPE = {
