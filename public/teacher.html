@@ -14,6 +14,10 @@
 
     <script src="https://www.gstatic.com/firebasejs/5.10.0/firebase.js"></script>
     <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.4.2/jquery.min.js"></script>
+    
+    <link href="https://unpkg.com/material-components-web@latest/dist/material-components-web.min.css" rel="stylesheet">
+    <script src="https://unpkg.com/material-components-web@latest/dist/material-components-web.min.js"></script>
+
     <script>
       // Initialize Firebase
       var config = {
@@ -26,6 +30,37 @@
       };
 firebase.initializeApp(config);
     </script>
+
+    <style>
+      #setup_dialog_background{
+        background: rgba(0,0,0,.45);
+        top:0; bottom:0; left:0; right:0;
+        position:fixed;
+
+        z-index:300;
+      }
+
+      #setup_dialog{
+        min-height:100px;
+        max-height: calc( 100vh - 100px );
+        min-width: 150px;
+        max-width: 500px;
+        background: white;
+        border-radius: 10px;
+
+        top:0; bottom:0; left:0; right:0;
+        position:fixed; 
+
+        margin:auto; 
+
+        z-index: 301;
+      }
+
+      #schoolSelector, #classSelector{
+        margin: 16px;
+        margin-left: 32px;
+      }
+    </style>
 
     <link rel="stylesheet" type="text/css" href="css/style.css"/>
     <link rel="stylesheet" type="text/css" href="https://fonts.googleapis.com/css?family=Noto+Sans+TC" >     
@@ -72,6 +107,57 @@ firebase.initializeApp(config);
       </div>
       <hr/>
       <div id="answerRank"></div>
+    </div>
+
+    <div id="setup_dialog_background">
+      <div id="setup_dialog">
+        <div id="schoolSelect_area">
+          <h2 style="font-size: 30px; font-weight:700; padding-left: 24px; padding-top:16px; padding-bottom:0px; margin-bottom:0px;" class="ch-font">設定學校</h2>
+          <div style="padding:16px; padding-bottom:0px;padding-left:24px;" class="ch-font">
+            請從下拉選單中，選擇您所在的學校：
+          </div>
+
+          <div class="mdc-select" id="schoolSelector">
+            <i class="mdc-select__dropdown-icon"></i>
+            <select id="schoolSelector_select" class="mdc-select__native-control">
+              <option value="" disabled selected></option>
+              <!-- <option value="grains">
+                Bread, Cereal, Rice, and Pasta
+                </option>
+                <option value="vegetables">
+                Vegetables
+                </option>
+                <option value="fruit">
+                Fruit
+                </option> -->
+            </select>
+            <label class="mdc-floating-label">選擇學校</label>
+            <div class="mdc-line-ripple"></div>
+          </div> 
+        </div>
+
+        <div id="classSelect_area">
+          <h2 style="font-size: 20px; font-weight:700; padding-left: 24px; padding-top:16px; padding-bottom:0px; margin-bottom:0px;" class="ch-font">選擇班級</h2>
+
+          <div class="mdc-select" id="classSelector">
+            <i class="mdc-select__dropdown-icon"></i>
+            <select id="classSelector_select" class="mdc-select__native-control">
+              <option value="" disabled selected></option>
+              <!-- <option value="grains">
+                Bread, Cereal, Rice, and Pasta
+                </option>
+                <option value="vegetables">
+                Vegetables
+                </option>
+                <option value="fruit">
+                Fruit
+                </option> -->
+            </select>
+            <label class="mdc-floating-label">選擇班級</label>
+            <div class="mdc-line-ripple"></div>
+          </div> 
+        </div>
+      </div>
     </div>
 
   </body>  
