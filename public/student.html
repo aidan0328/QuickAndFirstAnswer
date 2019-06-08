@@ -5,9 +5,7 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/p5.js/0.7.3/addons/p5.dom.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/2.2.0/socket.io.js"></script>
 
-    <script src="https://code.jquery.com/jquery-3.4.0.slim.min.js"
-            integrity="sha256-ZaXnYkHGqIhqTbJ6MB4l9Frs/r7U4jlx7ir8PJYBqbI="
-            crossorigin="anonymous"></script>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/vue"></script>
 
     <link rel="stylesheet" type="text/css" href="css/style.css"/>
@@ -62,7 +60,8 @@
       }
 
       body{
-        background-image: linear-gradient(120deg, #84fab0 0%, #8fd3f4 100%);
+        // background-image: linear-gradient(120deg, #84fab0 0%, #8fd3f4 100%);
+        background: #fff;
         overflow-x:hidden;
       }
 
@@ -84,6 +83,23 @@
         user-select: none;
         outline: 0;
       }
+
+      .m-card{
+        box-shadow:0 6px 10px 0 rgba(0,0,0,.14),0 1px 18px 0 rgba(0,0,0,.12),0 3px 5px -1px rgba(0,0,0,.2);
+        border-radius:10px;
+      }
+
+      .drawer_menu{
+        background:rgba(0,0,0,.60);
+        position:fixed;
+        top:0; bottom:0; left:0; right:0;
+        z-index: 50;
+        display:none;
+      }
+
+      .menu{
+        z-index: 60;
+      }
     </style>
     
       <link rel="stylesheet" href="./css/animate.css"/>
@@ -100,8 +116,8 @@
     </div>
 
     <div class="m-toolbar disableSelection">
-      <span class="material-icons menu">menu</span>
-      <span  id="student_name" style="margin-left:24px;font-weight:700;font-size:30px;color:white;" class="ch-font">學生</span>      
+      <span class="material-icons menu" style="color:black;">menu</span>
+      <span  id="student_name" style="margin-left:24px;font-weight:700;font-size:30px;" class="ch-font">學生</span>      
       <span  id="description" style="margin-left:24px;font-weight:700;font-size:30px;color:rgb(102, 0, 102);" class="ch-font"></span>
       <span  id="countdown_timer" style="margin-left:24px;font-weight:700;font-size:30px;color:blue;" class="ch-font"></span>
     </div>
@@ -121,7 +137,7 @@
     </div>
 
     <div id="UserScore">
-      <div class="m-card" style="max-width:500px;margin-left:auto;margin-right:auto;min-height:500px;margin-top:100px;">
+      <div class="m-card" style="max-width:500px;margin-left:auto;margin-right:auto;min-height:100px;margin-top:100px;margin-bottom:100px;">
       <div style="font-size:24px;font-weight:700;padding:16px 32px;" class="ch-font disableSelection">積分</div>
       <div style="margin: 0 auto;max-height:100px;overflow-y:hidden;">
         <div v-for="(value, key) in userScore" class="ch-font" style="margin:8px 16px;margin-left: 48px;">
@@ -130,13 +146,21 @@
           {{value.Name}} : {{value.Score}}
         </div>
       </div>
-      <hr/>
+      <!-- <hr/> -->
         <div v-for="(value, key) in userScore" class="ch-font" v-if="username == value.Name" style="margin:8px 16px;margin-left: 48px;">
            <!-- {{key}} :
            {{value}} -->
            {{username}} : {{value.Score}}
          </div>
 
+    </div>
+
+    <div class="drawer_menu"> 
+      <span class="material-icons menu closeMenu disableSelection" style="color:white;font-size:35px;padding:24px;">close</span>
+
+      <div class="ch-font" style="font-weight:700;text-align:center;font-size: 40px;color:white;">
+        <div id="gotoConsole">Console</div>
+      </div>
     </div>
 
   </body>

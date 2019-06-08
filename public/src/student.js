@@ -236,6 +236,52 @@ var Games = {
         //End of method
       }
     }
+  },
+  
+  SystemMenu:{
+    init:()=>{
+      var self = Games.SystemMenu.vars;
+
+      $(".menu, .closeMenu").click(e=>{
+        var drawerMenu = document.querySelector(".drawerMenu");
+
+        self.toggleMenu = !self.toggleMenu;
+
+        if(self.toggleMenu){
+          console.log($(".drawer_menu"));
+          $(".drawer_menu").fadeIn(); 
+          console.log("open");
+
+          $(".m-toolbar").fadeOut();
+        }else{
+          console.log($(".drawer_menu"));
+          $(".drawer_menu").fadeOut(); 
+          console.log("close");
+
+          $(".m-toolbar").fadeIn();
+        }
+      });
+
+      $("#gotoConsole").click(e=>{
+        window.location.href = '/teacher.html';
+      });
+    },
+
+    setup:()=>{
+    },
+     
+    draw:()=>{
+    },
+
+    mouseClicked:()=>{
+    },
+
+    end:()=>{
+    },
+
+    vars:{
+      toggleMenu:false
+    }
   }
 }
 
