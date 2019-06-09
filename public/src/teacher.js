@@ -15,7 +15,7 @@ var Games = {
         methods = Games.SchoolSelect.methods;
 
       console.log("init() is running...");
-console.log(document.querySelector("#schoolSelector_select"))
+      console.log(document.querySelector("#schoolSelector_select"))
 
       self.schoolSelector = new mdc.select.MDCSelect(document.querySelector("#schoolSelector"));
 
@@ -29,8 +29,16 @@ console.log(document.querySelector("#schoolSelector_select"))
         methods.fetchClass(self,methods);
       });
 
+      $("#done.schoolSelector").click(e=>{
+        $("#loading.schoolSelector").show();
+        $("#done.schoolSelector").attr("disabled", true);
+
+        methods.doneSelect();
+      });
+
       $("#schoolSelector").hide();
       $("#classSelect_area").hide();
+      $("#done.schoolSelector").attr("disabled", true);
       
       methods.fetchSchoolList(self);
     },
@@ -42,7 +50,9 @@ console.log(document.querySelector("#schoolSelector_select"))
       schoolsDatabase:{},
 
       classSelector:{},
-      classList:[]
+      classList:[],
+      selectedClass:"",
+      studentList:[]
     },
 
     methods:{
@@ -51,6 +61,7 @@ console.log(document.querySelector("#schoolSelector_select"))
           self.schoolsDatabase = snapshot.val();
 
           $("#schoolSelector").fadeIn();
+          $("#loading.schoolselector").fadeOut();
 
           // schoolSelector = createSelect(document.querySelector("#schoolSelector_select"));
 
@@ -64,79 +75,61 @@ console.log(document.querySelector("#schoolSelector_select"))
 
       fetchClass:(self, methods)=>{
         if(! self.selectedSchool in self.schoolList) return;
+
+        $("#done.schoolSelector").attr("disabled", true);
+        
+        var classes = self.schoolsDatabase[self.selectedSchool],
+          classList = [] ;
+
+        //Add base option to select
         $("#classSelector_select").html('<option value="" disabled selected></option>');
         console.log(self.schoolsDatabase[self.selectedSchool])
-        for(var item in self.schoolsDatabase[self.selectedSchool]){
-          self.classList.push(item);
+
+        //Add options to select 
+        for(var item in classes){
+          classList.push(item); //Add item to classList
           $("#classSelector_select").append('<option value=1>'+ item +'</option>');;
         }
 
-        self.classSelector = new mdc.select.MDCSelect(document.querySelector("#classSelector"));
-        methods.renderClass();
-      },
+        //Init classSeelctor
+        self.classSelector = new mdc.select.MDCSelect(document.querySelector("#classSelector")); 
+        //Setup the onChange listener, while select changed, then display and process the class.
+        self.classSelector.listen('MDCSelect:change', () => {
+          var classItem = classList[self.classSelector.selectedIndex - 1];
+          self.selectedClass = classItem;
+          methods.initClass(self, methods, classes[classItem]);
+        });
 
-      renderClass:(self, methods) => {
         $("#classSelect_area").fadeIn();
-
       },
 
-      submit: function () {
-        var selectedSchoole = schoolSelector.value();
-        var selectedClassroom = classSelector.value();
-        realTimeDBPath = '/'+ selectedSchoole  + '/' + selectedClassroom + '/';
 
-        /* 根據選定的班級，載入學生名單與分數 */
-        for(var schoole in realTimeDB_data){
-          if(schoole == selectedSchoole) {
-            for(var classroom in realTimeDB_data[schoole]){
-              if(classroom == selectedClassroom) {        
-                var studentList = [];
-                for(var student in realTimeDB_data[schoole][classroom]){
-                  studentList.push(student);
-                }
-                var text="";
-                for(var index in studentList){
-                  text += studentList[index];
-                  if(index < (studentList.length-1))
-                    text += '\n';
-                }
-                displayStudentList(text);
-                break;
-              }
-            }
-          }
+      initClass: function (self, methods, studentsObject) {
+        console.log("init class...");
+        console.log(studentsObject);
+
+        var studentList = [];
+
+        //$("#setup_dialog_background").fadeOut();
+
+        for(var student in studentsObject){
+          studentList.push(student);
         }
 
-        database.ref(realTimeDBPath).on('value', function(snapshot) 
-          {
-            app.studentScore = [];
-            var temp = snapshot.val();
-            for(var index in temp){      
-              var obj = {
-                Name : index,
-                Score : temp[index]
-              };
-              app.studentScore.push(obj);
-            }
-            for(var i in app.student ){
-              for(var j in app.studentScore){
-                if( app.student[i].Name == app.studentScore[j].Name) {
-                  app.student[i].Score = app.studentScore[j].Score;
+        self.studentList = studentList;
 
-                  Vue.set(app.student, i,{
-                    Name : app.studentScore[j].Name,
-                    Score : app.studentScore[j].Score,
-                    State : app.student[i].State
-                  });
-                }
-              }
-            }
-          });
-        SendRealTimeDBPath();
+        console.log(studentList);
+        
+        $("#done.schoolSelector").attr("disabled", false);
+      },
 
-
+      doneSelect:()=>{
+        console.log("finishing the selection");
+        $("#setup_dialog_background").fadeOut();
       }
-}
+    } //Methods
+  } // SchoolSelect
+}; //Games
 
 function eventCall(eventName,data){
   socket.emit("event_call",{

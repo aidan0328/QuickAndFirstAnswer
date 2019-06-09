@@ -31,7 +31,8 @@
         position:fixed;
         top:0; bottom: 0; left: 0; right: 0;
         z-index:100;
-        background-image: linear-gradient(to right, #fa709a 0%, #fee140 100%);
+        // background-image: linear-gradient(to right, #fa709a 0%, #fee140 100%);
+        background: rgba(0,0,0,.45);
         text-align:center;
 
         animation-duration: 0.5s;
@@ -40,23 +41,60 @@
       }
 
       #inputName{
-        margin-top: calc(50vh - ( 70px + 32px )  );
-        font-size: 140px;
-        color: white;
+        margin-top:60px;
+        font-size: 35px;
+        //margin-top: calc(50vh - ( 70px + 32px )  );
+        color: rgba(0,0,0,.75);
         /* background:rgba(255,255,255,0.25); */
         background:transparent;
         border:none;
-        padding: 32px;
+        border-bottom: 4px solid rgb(25, 118, 210);
+        border-top-left-radius: 10px;
+        border-top-right-radius: 10px;
+        outline: none !important;
+        //margin:24px;
+        padding: 8px;
 
         text-align: center;
         font-family: 'Noto Sans TC', sans-serif;
 
-        width: 100%;
+        //width: calc( 100% - 64px );
+        width: 300px;
+
+        transition: 0.25s ease-in-out all;
+        -moz-transition: 0.25s ease-in-ou all;
+        -webkit-transition: 0.25s ease-in-ou all;
+      }
+
+      #inputName:focus{
+        background:rgba(25, 118, 210, 0.25);
+      }
+
+      #inputName_dialog{
+        min-width: 300px;
+        max-width: 500px;
+
+        min-height:150px;
+        max-height: calc( 100vh - 100px );
+
+        position:fixed;
+        top:0;
+        bottom:0;
+        left:0;
+        right:0;
+
+        margin:auto;
+
+        background: white;
+        border-radius: 10px;
+
+        z-index:120;
+
       }
 
       #inputName::placeholder{
         /*text-align: center;*/
-        color: rgba(255,255,255,0.45);
+        color: rgba(0,0,0,0.25);
       }
 
       body{
@@ -74,15 +112,6 @@
         margin-top:32px;
       }
 
-      .disableSelection{
-        -webkit-touch-callout: none;
-        -webkit-user-select: none;
-        -khtml-user-select: none;
-        -moz-user-select: none;
-        -ms-user-select: none;
-        user-select: none;
-        outline: 0;
-      }
 
       .m-card{
         box-shadow:0 6px 10px 0 rgba(0,0,0,.14),0 1px 18px 0 rgba(0,0,0,.12),0 3px 5px -1px rgba(0,0,0,.2);
@@ -104,6 +133,9 @@
     
       <link rel="stylesheet" href="./css/animate.css"/>
       <link rel="stylesheet" href="./css/button.css"/>
+
+      <link href="https://unpkg.com/material-components-web@latest/dist/material-components-web.min.css" rel="stylesheet">
+      <script src="https://unpkg.com/material-components-web@latest/dist/material-components-web.min.js"></script>
   </head>
 
   <body>
@@ -111,8 +143,17 @@
       test: 190609-1
     </div>
     <div id="inputNameDiv" class="animated">
-      <input style="width: 300px; padding: 20px; cursor: pointer; box-shadow: 6px 6px 5px; #999; -webkit-box-shadow: 6px 6px 5px #999; -moz-box-shadow: 6px 6px 5px #999; font-weight: bold; background: #ffff00; color: #000; border-radius: 10px; border: 1px solid #999; font-size: 150%;" type="button" value="送出" onclick="btnSumbitClick()" />
-      <input id="inputName" placeholder="請輸入你的名字"/>
+      <!--<input style="width: 300px; padding: 20px; cursor: pointer; box-shadow: 6px 6px 5px; #999; -webkit-box-shadow: 6px 6px 5px #999; -moz-box-shadow: 6px 6px 5px #999; font-weight: bold; background: #ffff00; color: #000; border-radius: 10px; border: 1px solid #999; font-size: 150%;" type="button" value="送出" onclick="btnSumbitClick()" /> -->
+      <div id="inputName_dialog">
+        <div style="font-size:60px;font-weight:300;margin-top:60px;" class="hc-font">你好</div>
+        <div class="ch-font">讓我們輸入名字來繼續吧！ </div>
+        <!--<input  type="button" value="送出" onclick="btnSumbitClick()" />-->
+        <input id="inputName" placeholder="請輸入你的名字"/><br>
+
+        <div style="align-items: center;justify-content: center; display:flex;">
+          <button style="position:absolute; bottom:0;margin-bottom: 32px" class="mdc-button mdc-button--unelevated" onclick="btnSumbitClick()">開始</button>
+        </div>
+      </div> 
     </div>
 
     <div class="m-toolbar disableSelection">
