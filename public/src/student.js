@@ -7,8 +7,8 @@ const database = firebase.database();
 //System config const
 const sysConfig = {  
   canvas:{
-    width:700,
-    height:500
+    width: window.innerWidth/*700,*/,
+    height: window.innerHeight/*500*/
   }
 };
 
@@ -32,18 +32,23 @@ var Games = {
         $("#countdown_timer").text('哇！你找到了，好棒棒哦！');
         self.button1.hide();
         self.started = false;
+        $("canvas").fadeOut();
       });
     },
 
     setup:function (data){
       var self = Games.ForceClick.vars; //Define self variable
 
+      $("canvas").fadeIn();
+
       self.started = true;
 
       var buttonPosition = JSON.parse(data);
+      self.button1.style("z-index","12");
+      self.button1.addClass("randomButton");
       self.button1.position(
-        buttonPosition.x,
-        buttonPosition.y
+        buttonPosition.x * (window.innerWidth / 20),
+        buttonPosition.y * (window.innerHeight / 20)
       );
 
       Vue.set(StudentRank,"rank",[]); //Clean the Student Rank list
@@ -62,6 +67,7 @@ var Games = {
       var self = Games.ForceClick.vars; //Define self variable
 
       self.button1.hide(); //Hide button1 when the game is ended.
+      $("canvas").fadeOut();
       self.started = false; //Set started to false which will disable onClick event.
     },
     
@@ -351,7 +357,8 @@ function setup() {
   // answerArea.canvas.parent('canvas');
 
   system.canvas = createCanvas(sysConfig.canvas.width, sysConfig.canvas.height);
-  system.canvas.parent('canvas');
+  system.canvas.style("display","none");
+  // system.canvas.parent('canvas');
 
   //Run each game init
   for(var index in Games){
@@ -437,7 +444,7 @@ function sendStudentName()
   if($("#inputName").val().trim() == "") return;
   studentName = $("#inputName").val().trim();
   $("#inputNameDiv").addClass("fadeOut");
-  $("#student_name").text(studentName);
+  $(".student_name").text(studentName);
   
   setCookie("student", studentName);  
   setTimeout(()=>{

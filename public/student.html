@@ -1,5 +1,6 @@
 <html>
   <head>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>學生</title>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/p5.js/0.7.3/p5.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/p5.js/0.7.3/addons/p5.dom.min.js"></script>
@@ -129,6 +130,7 @@
       .menu{
         z-index: 60;
       }
+
     </style>
     
       <link rel="stylesheet" href="./css/animate.css"/>
@@ -142,6 +144,7 @@
     <div style="position:fixed;bottom:0;right:0;margin:8px;color:rgba(0,0,0,.23);z-index:1000;">
       test: 190609-1
     </div>
+
     <div id="inputNameDiv" class="animated">
       <!--<input style="width: 300px; padding: 20px; cursor: pointer; box-shadow: 6px 6px 5px; #999; -webkit-box-shadow: 6px 6px 5px #999; -moz-box-shadow: 6px 6px 5px #999; font-weight: bold; background: #ffff00; color: #000; border-radius: 10px; border: 1px solid #999; font-size: 150%;" type="button" value="送出" onclick="btnSumbitClick()" /> -->
       <div id="inputName_dialog">
@@ -160,14 +163,23 @@
       <span class="material-icons menu" style="color:black;">menu</span>
       <span  id="student_name" style="margin-left:24px;font-weight:700;font-size:30px;" class="ch-font">學生</span>      
       <span  id="description" style="margin-left:24px;font-weight:700;font-size:30px;color:rgb(102, 0, 102);" class="ch-font"></span>
-      <span  id="countdown_timer" style="margin-left:24px;font-weight:700;font-size:30px;color:blue;" class="ch-font"></span>
+      <span  id="countdown_timer" style="margin-left:24px;font-weight:700;font-size:30px;color:#1565c0;" class="ch-font"></span>
     </div>
 
-    <div style="display: flex;display: -webkit-flex;display: -ms-flexbox;margin-top:100px;">
-      <div style="flex: 1 1 auto;" id="canvas">
-        <!-- This -->
+    <div style="margin-top:100px;">
+      <!-- <div style="flex: 1 1 auto;" id="canvas">
+      </div> -->
+      <div style="width:500px; max-width:500px; margin:32px auto;display:flex;">
+        <img src="./assets/account_icon.png" style="display:inline;width: 100px; height: 100px; border-radius: 50%;"></img>
+        <div style="display:inline;padding-left:24px;">
+          <h2 id="student_name" style="padding:8px 0; font-size:27px;margin:0;" class="ch-font student_name">{{Username}}</h2>
+          <div style="color:rgba(0,0,0,0.6) display:flex;">
+            <div style="margin-top:5px;display:inline" class="material-icons">stars</div>
+            <div style="display:inline;">30</div>
+          </div>
+        </div>
       </div>
-      <div style="width:300px;min-height: 150px;margin:32px;padding:16px;" class="m-card">
+      <div style="position: absulote; width:500px; max-width: 500px; margin:32px auto;padding:16px;" class="m-card">
         <div style="font-size:24px;font-weight:700;" class="ch-font disableSelection">搶答排名</div>
         <div id="studentRank" style="color:rgba(0,0,0,.8);">
           <div v-for="item in rank" class="ch-font">
@@ -177,30 +189,31 @@
       </div>
     </div>
 
-    <div id="UserScore">
-      <div class="m-card" style="max-width:500px;margin-left:auto;margin-right:auto;min-height:100px;margin-top:100px;margin-bottom:100px;">
-      <div style="font-size:24px;font-weight:700;padding:16px 32px;" class="ch-font disableSelection">積分</div>
-      <div style="margin: 0 auto;max-height:100px;overflow-y:hidden;">
-        <div v-for="(value, key) in userScore" class="ch-font" style="margin:8px 16px;margin-left: 48px;">
-          <!-- {{key}} : 
-          {{value}} -->
-          {{value.Name}} : {{value.Score}}
+    <div id="UserScore" style=""> 
+      <div class="m-card" style="z-index5;width:500px;max-width:500px;margin: 0px auto 100px auto; padding: 16px;">
+        <div style="font-size:24px;font-weight:700;" class="ch-font disableSelection">積分</div>
+        <div style="margin: 0 auto;max-height:100px;overflow-y:hidden;">
+          <div v-for="(value, key) in userScore" class="ch-font" style="margin:8px 16px;margin-left: 48px;">
+            <!-- {{key}} : 
+              {{value}} -->
+              {{value.Name}} : {{value.Score}}
+          </div>
         </div>
-      </div>
-      <!-- <hr/> -->
+        <!-- <hr/> -->
         <div v-for="(value, key) in userScore" class="ch-font" v-if="username == value.Name" style="margin:8px 16px;margin-left: 48px;">
-           <!-- {{key}} :
-           {{value}} -->
-           {{username}} : {{value.Score}}
-         </div>
+          <!-- {{key}} :
+            {{value}} -->
+            {{username}} : {{value.Score}}
+        </div>
 
-    </div>
+      </div>
 
-    <div class="drawer_menu"> 
-      <span class="material-icons menu closeMenu disableSelection" style="color:white;font-size:35px;padding:24px;">close</span>
+      <div class="drawer_menu"> 
+        <span class="material-icons menu closeMenu disableSelection" style="color:white;font-size:35px;padding:24px;">close</span>
 
-      <div class="ch-font" style="font-weight:700;text-align:center;font-size: 40px;color:white;">
-        <div id="gotoConsole">Console</div>
+        <div class="ch-font" style="font-weight:700;text-align:center;font-size: 40px;color:white;">
+          <div id="gotoConsole">Console</div>
+        </div>
       </div>
     </div>
 

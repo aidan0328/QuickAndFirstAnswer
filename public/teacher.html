@@ -1,5 +1,6 @@
 <html>
   <head>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>老師</title>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/p5.js/0.7.3/p5.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/p5.js/0.7.3/addons/p5.dom.min.js"></script>  
@@ -90,7 +91,7 @@ firebase.initializeApp(config);
         <div> 已上線的學生人數 : {{Object.size(connectedList)}}</div>
 
         <div v-for="(value, key) in student">
-          {{value.State}}{{ value.Name }} : {{value.Score}} | <a href="#" v-on:click="addScore(value.Name)">加分</a> | <a href="#" v-on:click="minusScore(value.Name)">減分</a>
+          {{ value.Name }} : {{value.Score}} | <a href="#" v-on:click="addScore(value.Name)">加分</a> | <a href="#" v-on:click="minusScore(value.Name)">減分</a>
         </div>
 
         <hr/>

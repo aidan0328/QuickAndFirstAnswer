@@ -33,7 +33,7 @@ var Games = {
         $("#loading.schoolSelector").show();
         $("#done.schoolSelector").attr("disabled", true);
 
-        methods.doneSelect();
+        methods.doneSelect(self);
       });
 
       $("#schoolSelector").hide();
@@ -113,7 +113,12 @@ var Games = {
         //$("#setup_dialog_background").fadeOut();
 
         for(var student in studentsObject){
-          studentList.push(student);
+          //studentList.push(student);
+          var studentObj = {
+            Name:student,
+            Score:studentsObject[student]
+          };
+          studentList.push(studentObj);
         }
 
         self.studentList = studentList;
@@ -123,9 +128,11 @@ var Games = {
         $("#done.schoolSelector").attr("disabled", false);
       },
 
-      doneSelect:()=>{
+      doneSelect:(self)=>{
         console.log("finishing the selection");
         $("#setup_dialog_background").fadeOut();
+
+        app.student = self.studentList;
       }
     } //Methods
   } // SchoolSelect
@@ -345,8 +352,8 @@ function displayStudentList(text){
     }
     else
     {
-      var x = getRandomInt(rect.left, rect.right);
-      var y = getRandomInt(rect.top, rect.bottom);
+      var x = getRandomInt(0, 20);
+      var y = getRandomInt(0, 20);
       var value = JSON.stringify({
         type : type,
         x : x,
