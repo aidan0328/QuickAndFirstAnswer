@@ -1,36 +1,173 @@
 <html>
   <head>
-    <title>主畫面</title>
+    <title>QAFA</title>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/p5.js/0.7.3/p5.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/p5.js/0.7.3/addons/p5.dom.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/2.2.0/socket.io.js"></script>
+
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/vue"></script>
+
+    <link rel="stylesheet" type="text/css" href="css/style.css"/>
+    <link rel="stylesheet" type="text/css" href="https://fonts.googleapis.com/css?family=Noto+Sans+TC" >     
+    <link rel="stylesheet" type="text/css" href="https://fonts.googleapis.com/icon?family=Material+Icons">
+
+    <script src="https://www.gstatic.com/firebasejs/5.10.0/firebase.js"></script>
 
     <script src="https://code.jquery.com/jquery-3.4.0.slim.min.js"
             integrity="sha256-ZaXnYkHGqIhqTbJ6MB4l9Frs/r7U4jlx7ir8PJYBqbI="
             crossorigin="anonymous"></script>
 
             <form>
-            <input style="width: 300px; padding: 20px; cursor: pointer; box-shadow: 6px 6px 5px; #999; -webkit-box-shadow: 6px 6px 5px #999; -moz-box-shadow: 6px 6px 5px #999; font-weight: bold; background: #ffff00; color: #000; border-radius: 10px; border: 1px solid #999; font-size: 150%;" type="button" value="我是學生" onclick="btnUserIsStudentClick()" />
+            <!-- <input style="width: 300px; padding: 20px; cursor: pointer; box-shadow: 6px 6px 5px; #999; -webkit-box-shadow: 6px 6px 5px #999; -moz-box-shadow: 6px 6px 5px #999; font-weight: bold; background: #ffff00; color: #000; border-radius: 10px; border: 1px solid #999; font-size: 150%;" type="button" value="我是學生" onclick="btnUserIsStudentClick()" />
             <input style="width: 300px; padding: 20px; cursor: pointer; box-shadow: 6px 6px 5px; #999; -webkit-box-shadow: 6px 6px 5px #999; -moz-box-shadow: 6px 6px 5px #999; font-weight: bold; background: #ffff00; color: #000; border-radius: 10px; border: 1px solid #999; font-size: 150%;" type="button" value="我是老師" onclick="btnUserIsTeacherClick()" />
-            </form>            
+            </form>             -->
     <script src="./src/common.js"></script>
+
+      <link rel="stylesheet" href="./css/animate.css"/>
+      <link rel="stylesheet" href="./css/button.css"/>
+
+      <link href="https://unpkg.com/material-components-web@latest/dist/material-components-web.min.css" rel="stylesheet">
+      <script src="https://unpkg.com/material-components-web@latest/dist/material-components-web.min.js"></script>
+
+    <style>
+      body{
+        margin:0;
+      }
+
+      .background{
+        //background: rgb(25, 118, 210);
+        position: absolute;
+        top:0;
+        left:0;
+        right:0;
+      }
+
+      .title-header{
+        background: rgb(25, 118, 210);
+        padding: 16px;
+        color: white;
+
+        padding-top: 100px;
+        padding-left: 60px;
+        padding-bottom: 24px;
+      }
+
+      .title-font{
+        font-size: 50px;
+        font-weight: 400;
+        margin: 16px 0;
+      }
+
+      .role-choose{
+        display:flex;
+        padding-bottom: 100px;
+        padding-top: 32px;
+      }
+
+      .role-choose--title{
+        font-size: 30px;
+        text-align: center;
+        padding-top: 32px;
+        margin-bottom: 8px;
+      }
+
+      .role-card{
+        border-radius: 10px;
+        border: 1px solid rgba(0,0,0,.3);
+        padding: 16px;
+        display:inline;
+        width: 200px;
+        height:250px;
+        margin:0 25px;
+
+        transition: 0.25s ease-in-out all;
+        -moz-transition: 0.25s ease-in-ou all;
+        -webkit-transition: 0.25s ease-in-ou all;
+      }
+
+      .role-card:hover{
+        background: rgba(0,0,0,.1);
+      }
+
+      .user-circle{
+        border-radius: 50%;
+        width: 120px;
+        height: 120px;
+        margin-left: auto;
+        margin-right: auto;
+
+        margin-top: 16px;
+
+      }
+
+      .student-circle{
+        background: #00838f;
+      }
+
+      .teacher-circle{
+        background: #7b1fa2;
+      }
+
+      .user-circle--title{
+        font-size: 24px;
+        font-weight: 700;
+        text-align: center;
+        margin-top: 24px;
+      }
+
+      .user-circle--subtitle{
+        font-size: 16px;
+        font-weight: 400;
+        text-align: center;
+        margin-top: 8px;
+        color: rgba(0,0,0,.45);
+      }
+
+
+    </style>
   </head>
   
   <body>
+    <div class="title-header">
+      <h2 class="title-font ch-font">全新的搶答系統來了</h2>
+      <div>
+        我們重新設計了使用者的介面與系統運行架構，讓QAFA變得更美好！
+      </div>
+    </div>
+
+    <h2 class="role-choose--title">好吧，讓我們速戰速決！</h2>
+    <div class="user-circle--subtitle">在開始前，請選擇你的身份</div>
+
+    <div class="role-choose">
+      <div class="role-card" style="margin-left:auto;" onclick="gotoStudent()">
+        <div class="user-circle student-circle"></div>
+        <div class="user-circle--title">學生</div>
+        <div class="user-circle--subtitle">點此進入學生頁面</div>
+      </div>
+      <div class="role-card" style="margin-right:auto;" onclick="gotoTeacher()">
+        <div class="user-circle teacher-circle"></div>
+        <div class="user-circle--title">老師</div>
+        <div class="user-circle--subtitle">點此進入學生頁面</div>
+      </div>
+    </div>
   </body>
 
 
   <script>
     //Event
 
-  window.location.href = '/student.html';
-/*    function btnUserIsStudentClick() 
+  //window.location.href = '/student.html';
+    function gotoStudent() 
     {       
       window.location.href = '/student.html';
     };
 
-    function btnUserIsTeacherClick() 
+    function gotoTeacher() 
     {        
+
+          window.location.href = '/teacher.html';
+      return;
         password = prompt("請輸入密碼");
         
         if( TEACHER_PASSWORD !== password )
@@ -42,6 +179,6 @@
           window.location.href = '/teacher.html';
           console.log("/teacher.html");
         }
-    }; */
+    }; 
   </script>
 </html>

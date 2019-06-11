@@ -541,3 +541,24 @@ function displayStudentList(text){
 function StudentReload(){
   eventCall("StudentReload","");
 }
+
+
+var loginDialog = new Vue({
+  el:"#login_div",
+  data:{
+    email:"",
+    passwd:""
+  },
+  methods:{
+    login:()=>{
+      firebase.auth().signInWithEmailAndPassword(loginDialog.email, loginDialog.passwd).catch(function(error) {
+        // Handle Errors here.
+        var errorCode = error.code;
+        var errorMessage = error.message;
+
+        alert(errorMessage);
+        // ...
+      });  
+    }
+  }
+})

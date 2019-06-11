@@ -90,6 +90,8 @@ var Games = {
         self.button1.hide();
 
         $("#countdown_timer").text('遊戲結束');
+
+        $("canvas").fadeOut();
       });
     },
 
@@ -106,9 +108,13 @@ var Games = {
           * timeout
       */
 
+      self.button1.style("z-index","12");
+      self.button1.addClass("randomButton");
       self.button1.show(); //Show the button to start the game
       self.lasttime.timeLimit = millis(); //Start timer.
       self.lasttime.loopTime = millis();
+
+      $("canvas").fadeIn();
     },
 
     draw:function(){
@@ -140,6 +146,8 @@ var Games = {
       //Why not end the game?
       self.button1.hide();
       self.started = false;
+
+      $("canvas").fadeIn();
     },
 
     vars:{
@@ -180,7 +188,8 @@ var Games = {
       if(millis() - self.timer.timeout > self.config.timeout){
         self.started = false;
         clear();
-        system.canvas.hide()
+        //system.canvas.hide()
+        $("canvas").fadeOut();
         $("#countdown_timer").text('時間到了');
       }
     },
@@ -200,7 +209,8 @@ var Games = {
         eventCall("student_answer", {"Name" : studentName});
         $("#countdown_timer").text('遊戲結束');
         self.started = false;
-        system.canvas.hide();
+        //system.canvas.hide();
+        $("canvas").fadeOut();
       }else{1
         console.log("failed")
       }
@@ -221,12 +231,16 @@ var Games = {
     methods:{
       renderingBlocks:()=>{
         // colorBlock.refresh = false;
+        //
+
+        var topPadding = 70,
+          leftPadding = 60;
         var self = Games.FindColorDiff.vars;
 
         var colorBlock = self.config.ColorBlock;
         var blockWidth = 
-          (sysConfig.canvas.width) / colorBlock.maxHoriBlockNumber;
-        var blockHeight = (sysConfig.canvas.height) / colorBlock.maxVertBlockNumber;;
+          (sysConfig.canvas.width - leftPadding) / colorBlock.maxHoriBlockNumber;
+        var blockHeight = (sysConfig.canvas.height - topPadding) / colorBlock.maxVertBlockNumber;;
         for(hori=0; hori <colorBlock.maxHoriBlockNumber; hori++) {
           for(vert=0; vert <colorBlock.maxVertBlockNumber ; vert++) {
             if ((hori == colorBlock.differentX) && vert == colorBlock.differentY){
@@ -235,7 +249,7 @@ var Games = {
               fill(colorBlock.mainColor);
             
             noStroke();
-            rect(hori*blockWidth, vert*blockHeight, blockWidth-2, blockHeight-2, 4);
+            rect(hori*blockWidth + (leftPadding /2), vert*blockHeight + topPadding, blockWidth-2, blockHeight-2, 4);
           }
         }
 

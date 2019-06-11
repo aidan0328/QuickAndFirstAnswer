@@ -87,3 +87,7 @@ canvas{
 
   z-index: -1;
 }
+
+.ch-font{
+  font-family: 'Noto Sans TC', sans-serif;
+}

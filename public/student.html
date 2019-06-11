@@ -130,6 +130,13 @@
       .menu{
         z-index: 60;
       }
+      
+      .backButton{
+        position: absolute;
+        top:0; left:0;
+        margin: 16px;
+        z-index: 600;
+      }
 
     </style>
     
@@ -148,6 +155,8 @@
     <div id="inputNameDiv" class="animated">
       <!--<input style="width: 300px; padding: 20px; cursor: pointer; box-shadow: 6px 6px 5px; #999; -webkit-box-shadow: 6px 6px 5px #999; -moz-box-shadow: 6px 6px 5px #999; font-weight: bold; background: #ffff00; color: #000; border-radius: 10px; border: 1px solid #999; font-size: 150%;" type="button" value="送出" onclick="btnSumbitClick()" /> -->
       <div id="inputName_dialog">
+        <span title="Back" class="disableSelection material-icons backButton" style="color:black;" onclick="location.href='./'">arrow_back</span>
+
         <div style="font-size:60px;font-weight:300;margin-top:60px;" class="hc-font">你好</div>
         <div class="ch-font">讓我們輸入名字來繼續吧！ </div>
         <!--<input  type="button" value="送出" onclick="btnSumbitClick()" />-->
@@ -173,9 +182,8 @@
         <img src="./assets/account_icon.png" style="display:inline;width: 100px; height: 100px; border-radius: 50%;"></img>
         <div style="display:inline;padding-left:24px;">
           <h2 id="student_name" style="padding:8px 0; font-size:27px;margin:0;" class="ch-font student_name">{{Username}}</h2>
-          <div style="color:rgba(0,0,0,0.6) display:flex;">
-            <div style="margin-top:5px;display:inline" class="material-icons">stars</div>
-            <div style="display:inline;">30</div>
+          <div style="color:rgba(0,0,0,0.6) display:flex;" class="ch-font">
+            Not logined
           </div>
         </div>
       </div>
