@@ -559,6 +559,33 @@ var loginDialog = new Vue({
         alert(errorMessage);
         // ...
       });  
+    },
+
+    googleLogin:()=>{
+      var provider = new firebase.auth.GoogleAuthProvider();
+      provider.addScope('https://www.googleapis.com/auth/contacts.readonly');
+      firebase.auth().signInWithPopup(provider).then(function(result) {
+      }).catch(function(error) {
+        alert(error);
+      });
     }
   }
 })
+
+firebase.auth().onAuthStateChanged(function(user) {
+  if (user) {
+    $("#login_div").fadeOut();
+  } else {
+    $("#login_div").show();
+  }
+});
+
+
+$("#signout").click(e=>{
+  firebase.auth().signOut().then(function() {
+    location.href='./' // Sign-out successful.
+  }).catch(function(error) {
+    alert(error);
+    location.href='./'
+  });
+});

@@ -115,14 +115,18 @@ firebase.initializeApp(config);
       .button{
         border: none;
         border-radius: 10px;
-        padding: 8px;
+        padding: 6px 8px;
         min-width: 80px;
         background: #1976d2;
-        font-size:18px;
+        font-size:16px;
         color:white;
 
         z-index: -1;
         outline: none !important;
+
+        transition: 0.25s ease-in-out all;
+        -moz-transition: 0.25s ease-in-ou all;
+        -webkit-transition: 0.25s ease-in-ou all;
       }
 
       .button:hover{
@@ -131,6 +135,33 @@ firebase.initializeApp(config);
 
       .button:active{
         background: #0d47a1;
+      }
+
+      .text-button{
+        //border: 2px solid #1976d2;
+        border:none;
+        border-radius: 10px;
+        padding: 6px;
+        min-width: 80px;
+        //background: #1976d2;
+        background: rgba(0,0,0,0);
+        font-size:16px;
+        color:#1976d2;
+
+        z-index: -1;
+        outline: none !important;
+
+        transition: 0.25s ease-in-out all;
+        -moz-transition: 0.25s ease-in-ou all;
+        -webkit-transition: 0.25s ease-in-ou all;
+      }
+
+      .text-button:hover{
+        background: rgba(25, 118, 210, .2);
+      }
+
+      .text-button:active{
+        background: rgba(25, 118, 210, .5);
       }
 
       #login_dialog > .backButton{
@@ -148,7 +179,7 @@ firebase.initializeApp(config);
 
   <body>
     <div class="m-toolbar disableSelection">
-      <span class="material-icons menu disableSelection" style="color:black;" onclick="location.href='./'">arrow_back</span>
+      <span class="material-icons menu disableSelection" id="signout" style="color:black;" >arrow_back</span>
       <span  id="student_name" style="margin-left:24px;font-weight:700;font-size:30px;" class="ch-font">老師</span>      
     </div>
 
@@ -261,7 +292,8 @@ firebase.initializeApp(config);
         <input v-model="email" type="email" placeholder="Email" class="inputField"/><br>
         <input v-model="passwd" style="margin-top: 24px;" type="password" placeholder="Password" class="inputField"/><br>
 
-        <button v-on:click="login" class="button" style="margin-top: 36px;">Login</button>
+        <button v-on:click="login" class="ch-font button" style="margin-top: 36px;">Login</button>
+        <!--<button v-on:click="googleLogin" class="ch-font text-button" style="margin-top: 36px; margin-left: 16px;">Login with Google</button>-->
         
       </div>
     </div>
