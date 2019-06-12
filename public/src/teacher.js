@@ -133,6 +133,9 @@ var Games = {
         $("#setup_dialog_background").fadeOut();
 
         app.student = self.studentList;
+        
+        realTimeDBPath = "/" + self.selectedSchool + "/" + self.selectedClass + "/";
+        console.log(dataBaseRoot)
       }
     } //Methods
   } // SchoolSelect
@@ -242,6 +245,7 @@ window.addEventListener("load", e=>{
 
 function setup() {   
   /* 從 RealTime DB 載入學校清單 */
+  noCanvas();
 }
 
 function displayStudentList(text){
@@ -321,9 +325,9 @@ function displayStudentList(text){
   }
 
   //Event 
-  btnLoadStudentList.addEventListener("click",e=>{
+  /* btnLoadStudentList.addEventListener("click",e=>{
     chooseFile('#fileDialog',displayStudentList);
-  });
+  }); */
 
   
   
@@ -502,46 +506,67 @@ function displayStudentList(text){
   
     dataBaseRoot.once("value").then(e=>{
       let userRef = database.ref(realTimeDBPath+name);
+
+      console.log(value);
           
       if( false == e.val().hasOwnProperty(name)){
         userRef.set(value);
+        var student = app.student;
+        for(var index in student){
+          if(student[index].Name == name)
+            student[index].Score = value;
+        }
+        Vue.set(app,"student",student);
       } else {
         userRef.once("value").then(e=>{
           if((Number(e.val()) + value)>=0){
-            userRef.set(Number(e.val()) + value)
+            userRef.set(Number(e.val()) + value);
+            var student = app.student;
+            for(var index in student){
+              if(student[index].Name == name)
+                student[index].Score = Number(e.val()) + value;
+            }
+            Vue.set(app,"student",student);
           }
         });
       }
     });
   }
   
-  var app = new Vue({
-    el:"#studentLiveList",
-    data:{
-      connectedList:{},
-      student_list:[],
-      studentScore:[],
-      student:[]
-    },
-    methods:{
-      addScore:(name)=>{
-        if( (null !== name) && ('' !== name)){
-          addScore(name, 1);
-        }
-      },
-      minusScore:(name)=>{
-        if( (null !== name) && ('' !== name)){          
-          addScore(name,-1);
-        }
-      }
-    }
-  });
 
 
 function StudentReload(){
   eventCall("StudentReload","");
 }
 
+var app = new Vue({
+  el:"#studentLiveList",
+  data:{
+    connectedList:{},
+    student_list:[],
+    studentScore:[],
+    student:[]
+  },
+  methods:{
+    addScore:(name)=>{
+      console.log("adding...");
+      if( (null !== name) && ('' !== name)){
+        addScore(name, 1);
+      }
+    },
+    minusScore:(name)=>{
+      console.log("minus...");
+      if( (null !== name) && ('' !== name)){          
+        addScore(name,-1);
+      }
+    },
+    changeScore:(name,value)=>{
+      console.log("chaning");
+      let userRef = database.ref(realTimeDBPath+name); 
+      userRef.set(value);
+    }
+  }
+});
 
 var loginDialog = new Vue({
   el:"#login_div",

@@ -39,7 +39,7 @@ var Games = {
     setup:function (data){
       var self = Games.ForceClick.vars; //Define self variable
 
-      $("canvas").fadeIn();
+      $("canvas").fadeIn(100);
 
       self.started = true;
 
@@ -114,7 +114,7 @@ var Games = {
       self.lasttime.timeLimit = millis(); //Start timer.
       self.lasttime.loopTime = millis();
 
-      $("canvas").fadeIn();
+      $("canvas").fadeIn(100);
     },
 
     draw:function(){
@@ -147,7 +147,7 @@ var Games = {
       self.button1.hide();
       self.started = false;
 
-      $("canvas").fadeIn();
+      $("canvas").fadeOut();
     },
 
     vars:{

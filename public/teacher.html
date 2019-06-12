@@ -175,48 +175,103 @@ firebase.initializeApp(config);
     <link rel="stylesheet" type="text/css" href="css/style.css"/>
     <link rel="stylesheet" type="text/css" href="https://fonts.googleapis.com/css?family=Noto+Sans+TC" >     
     <link rel="stylesheet" type="text/css" href="https://fonts.googleapis.com/icon?family=Material+Icons">
+    <link rel="stylesheet" type="text/css" href="css/teacher.css"/>
   </head>
 
   <body>
-    <div class="m-toolbar disableSelection">
-      <span class="material-icons menu disableSelection" id="signout" style="color:black;" >arrow_back</span>
-      <span  id="student_name" style="margin-left:24px;font-weight:700;font-size:30px;" class="ch-font">老師</span>      
-    </div>
 
-    <div style="margin-top:100px;">
-      <input style="display:none;" id="fileDialog" type="file" accept=".txt"/>
-      <button id="loadStudentList">載入學生清單</button>  
-      <br><br>
-      <button id="sendGeneralQuestion">一般搶答</button>
-      <button id="sendReactionlQuestion">反應搶答</button>
-      <button id="sendColorBlockQuestion">色差搶答</button>
-      <button id="sendColorNumberQuestion">順序搶答</button>
-      <button onclick="StudentReload()">學生重新載入</button>
-      <hr/>      
-      <div id="studentList"></div>
-
-      <div id="studentLiveList">
-        <div> 已上線的學生人數 : {{Object.size(connectedList)}}</div>
-
-        <div v-for="(value, key) in student">
-          {{ value.Name }} : {{value.Score}} | <a href="#" v-on:click="addScore(value.Name)">加分</a> | <a href="#" v-on:click="minusScore(value.Name)">減分</a>
-        </div>
-
-        <hr/>
-        <div v-for="(value, key) in connectedList">
-          {{ value }}
-        </div>
-        <!-- <div v-for="(value, key) in connectedList">
-          {{ value }} - <a href="#" v-on:click="addScore(value)">加分</a> | <a href="#" v-on:click="minusScore(value)">減分</a>
-          </div> -->
-
-          <!-- <div v-for="item in student_list">
-            {{ item }} : <a href="#" v-on:click="addScore(item)"> 加分 </a> | <a href="#" v-on:click="minusScore(item)"> 減分 </a>
-            </div> -->
-
+    <div class="dashboard-body">
+      <div class="dashboard-sidebar">
+        <span class="menu icon top material-icons disableSelection" id="signout" >arrow_back</span><br>
+        <span class="menu icon bottom material-icons disableSelection" >info</span>
       </div>
-      <hr/>
-      <div id="answerRank"></div>
+      <div class="dashboard-content">
+        <div class="m-toolbar--teacher disableSelection">
+          <!--<span class="material-icons menu disableSelection" id="signout" style="color:black;" >arrow_back</span>-->
+          <span id="student_name" style="margin-left:24px;font-size:30px;" class="ch-font">老師</span>      
+        </div>
+
+        <div class="quick-action">
+          <div class="title">快速動作</div>
+          <div class="quick-action--content">
+            <div id="sendGeneralQuestion" class="quick-action--card">
+              <div class="icon"></div>
+              <h2 class="title">一般搶答</h2>
+            </div>
+
+            <div id="sendReactionlQuestion" class="quick-action--card">
+              <div class="icon"></div>
+              <h2 class="title">反應搶答</h2>
+            </div>
+
+            <div id="sendColorBlockQuestion" class="quick-action--card">
+              <div class="icon"></div>
+              <h2 class="title">色差搶答</h2>
+            </div>
+
+            <div onclick="StudentReload()" class="quick-action--card">
+              <div class="icon"></div>
+              <h2 class="title">學生重新載入</h2>
+            </div>
+          </div>
+        </div>
+        <div style="display:flex;" id="studentLiveList">
+          <div style="display:inline;width:100%" class="student-online">
+            <div class="title">分數表</div>
+            <ul style="color:white;padding:16px;" class="mdc-list">
+              <li v-for="(value, key) in student" style="height: 60px;" class="mdc-list-item" tabindex="0">
+                <span style="color: rgba(255,255,255,0.7); font-size: 40px;" class="material-icons mdc-list-item__graphic">
+                    account_circle
+                </span>
+                <span class="mdc-list-item__text">
+                  {{ value.Name }}
+                </span>
+                <span class="mdc-list-item__meta">
+                  <button class="mdc-icon-button material-icons" style="color: white;" v-on:click="addScore(value.Name)">add_circle_outline</button>
+                  <input @input="changeScore(value.Name, value.Score)" v-model="value.Score" type="number" placeholder="score" class="numberInputField"/>
+                  <button class="mdc-icon-button material-icons" style="color: white;" v-on:click="minusScore(value.Name)">remove_circle_outline</button>
+                </span>
+              </li>
+            </ul>
+
+            <!-- <div v-for="(value, key) in student">
+
+              {{ value.Name }} : {{value.Score}} | <a href="#" v-on:click="addScore(value.Name)">加分</a> | <a href="#" v-on:click="minusScore(value.Name)">減分</a>
+            </div> -->
+          </div>
+
+          <div style="display:inline;width:100%;" class="student-online">
+            <div class="title">在線使用者</div>
+            <ul style="color:white;padding:16px;" class="mdc-list">
+              <li class="mdc-list-item" v-for="(value, key) in connectedList">
+                {{ value }}
+              </li>
+            </ul>
+          </div>
+          <!--<div >
+
+            <div> 已上線的學生人數 : {{Object.size(connectedList)}}</div>
+            <hr/>
+            <div v-for="(value, key) in connectedList">
+              {{ value }}
+            </div>
+          </div>-->
+        </div>
+
+
+        <!--<input style="display:none;" id="fileDialog" type="file" accept=".txt"/>
+        <button id="loadStudentList">載入學生清單</button>  
+        <br><br>
+        <button id="sendGeneralQuestion">一般搶答</button>
+        <button id="sendReactionlQuestion">反應搶答</button>
+        <button id="sendColorBlockQuestion">色差搶答</button>-->
+        <button id="sendColorNumberQuestion">順序搶答</button>
+        <button onclick="StudentReload()">學生重新載入</button>
+
+        <div id="studentList"></div>
+        <div id="answerRank"></div>
+      </div>
+      
     </div>
 
     <div id="setup_dialog_background">
