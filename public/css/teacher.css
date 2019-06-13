@@ -116,6 +116,7 @@
   margin-left:24px;
 }
 
+
 .quick-action{
   margin: 32px;
   background: rgba(255,255,255,.1);
@@ -123,7 +124,7 @@
 }
 .quick-action--content{
   display: flex;
-  padding: 16px 24px;
+  padding: 24px 32px;
   margin:0;
   padding-top: 8px;
 }
@@ -179,10 +180,26 @@
 }
 
 .student-online{
-  margin: 32px;
+  margin: 24px 16px;
+  margin-top:0;
   background: rgba(255,255,255,.1);
   box-shadow:0 6px 10px 0 rgba(0,0,0,.14),0 1px 18px 0 rgba(0,0,0,.12),0 3px 5px -1px rgba(0,0,0,.2);
 }
+
+@media only screen and (max-width: 1000px){
+  #studentLiveList{
+    flex-direction: column;
+    padding: 32px;
+  }
+
+  .student-online{
+    margin:24px 0 ;
+    margin-top:0;
+    background: rgba(255,255,255,.1);
+    box-shadow:0 6px 10px 0 rgba(0,0,0,.14),0 1px 18px 0 rgba(0,0,0,.12),0 3px 5px -1px rgba(0,0,0,.2);
+  }
+}
+
 
 .student-online > .title{
   font-size: 24px;
