@@ -34,6 +34,7 @@ var Games = {
         self.button1.hide();
         self.started = false;
         $("canvas").fadeOut();
+        currentGame = "";
       });
     },
 
@@ -70,6 +71,7 @@ var Games = {
       self.button1.hide(); //Hide button1 when the game is ended.
       $("canvas").fadeOut();
       self.started = false; //Set started to false which will disable onClick event.
+      currentGame = "";
     },
     
     vars:{
@@ -93,6 +95,7 @@ var Games = {
         $("#countdown_timer").text('遊戲結束');
 
         $("canvas").fadeOut();
+        currentGame = "";
       });
     },
 
@@ -149,6 +152,8 @@ var Games = {
       self.started = false;
 
       $("canvas").fadeOut();
+
+      currentGame = "";
     },
 
     vars:{
