@@ -18,6 +18,7 @@ var system = {
 }
 
 //Games object
+var currentGame = "";
 var Games = {
   ForceClick:{
     init:()=>{
@@ -407,8 +408,10 @@ function draw() {
     var game = Games[index];
 
     try{
-      if(game.draw)
+      if(game.draw && index == currentGame)
         game.draw();
+      else
+        console.log("index: " + index + ", game:" + currentGame);
     }catch(e){
       console.log(e);
     }
@@ -589,24 +592,29 @@ function TeacherSendQuestion(e){
     button.remove();
   });
 
+
   switch(JSON.parse(e).type){
     case "BtnFixedPosition": 
+      currentGame = "ForceClick";
       Games.ForceClick.setup(e);
       break;
 
     case 'BtnRandomPosition' :
+      currentGame = "RandomForceClick";
       Games.RandomForceClick.setup(e);
       break;
 
     case "ColorBlock" : 
+      currentGame = "FindColorDiff";
       Games.FindColorDiff.setup(e);
       break;
 
     case "NumberOrderByColor" : 
-        answerType = ANSWAER_TYPE.ColorNumberBtn;
-        DrawColorNumberBtn(e);
-        //answerArea.canvas.show();
-        break;        
+      currentGame = "";
+      answerType = ANSWAER_TYPE.ColorNumberBtn;
+      DrawColorNumberBtn(e);
+      //answerArea.canvas.show();
+      break;        
   }
   $("#countdown_timer").text('倒數 : ' + countDownTimer/1000 + ' 秒');  
 }
